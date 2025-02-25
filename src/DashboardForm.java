@@ -140,7 +140,7 @@ public class DashboardForm extends JFrame {
         double stock = Double.parseDouble(stockField.getText());
         int price = Integer.parseInt(priceField.getText());
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pos_db", "root", "");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pos_db", "root", "1234");
             PreparedStatement stmt = conn.prepareStatement("INSERT INTO products (name, stock, price) VALUES (?, ?, ?)");
             stmt.setString(1, name);
             stmt.setDouble(2, stock);
@@ -168,7 +168,7 @@ public class DashboardForm extends JFrame {
         int price = Integer.parseInt(priceField.getText());
 
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pos_db", "root","");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pos_db", "root","1234");
 
             PreparedStatement stmt = conn.prepareStatement("UPDATE products SET name = ?, stock = ?, price = ? WHERE id = ?");
             stmt.setString(1, name);
@@ -194,7 +194,7 @@ public class DashboardForm extends JFrame {
         int id = (int) productsTable.getValueAt(selectedRow, 0);
         
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pos_db", "root", "");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pos_db", "root", "1234");
  
             PreparedStatement stmt = conn.prepareStatement("DELETE FROM products WHERE id = ?");
             stmt.setInt(1, id);
@@ -210,7 +210,7 @@ public class DashboardForm extends JFrame {
     private void lihatProduk() {
         tableModel.setRowCount(0); // Clear tabel sebelum menambahkan data baru
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pos_db", "root", "");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pos_db", "root", "1234");
             PreparedStatement stmt = conn.prepareStatement("SELECT * FROM products");
             ResultSet rs = stmt.executeQuery();
 
@@ -232,7 +232,7 @@ public class DashboardForm extends JFrame {
         tableModel.setRowCount(0); // Clear tabel sebelum menambahkan data baru
         
         try {
-        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pos_db", "root", "");
+        Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/pos_db", "root", "1234");
         PreparedStatement stmt = conn.prepareStatement("SELECT * FROM products WHERE name LIKE ?");
         stmt.setString(1, "%" + keyword + "%");
         ResultSet rs = stmt.executeQuery();
