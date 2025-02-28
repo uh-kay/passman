@@ -9,7 +9,7 @@ public class Config {
 
     static {
         try {
-            FileInputStream input = new FileInputStream("config.properties");
+            FileInputStream input = new FileInputStream(".config.properties");
             properties.load(input);
         } catch (IOException e) {
             System.err.println("Could not load config: " + e.getMessage());

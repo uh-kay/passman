@@ -1,7 +1,6 @@
 import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
-import java.util.Properties;
 
 public class LoginSystem extends JFrame {
     private JPanel cardPanel;
@@ -17,12 +16,10 @@ public class LoginSystem extends JFrame {
     private JPasswordField regConfirmPasswordField;
 
     // Database configuration constants
-    private static Properties properties = new Properties();
-
     private static final String DB_URL = Config.get("DB_URL");
-    private static final String DB_USER = properties.getProperty("DB_USER");
-    private static final String DB_PASSWORD = properties.getProperty("DB_PASSWORD");
-    private static final String DB_DRIVER = properties.getProperty("DB_DRIVER");
+    private static final String DB_USER = Config.get("DB_USER");
+    private static final String DB_PASSWORD = Config.get("DB_PASSWORD");
+    private static final String DB_DRIVER = Config.get("DB_DRIVER");
 
     // Card identifiers
     private static final String LOGIN_PANEL = "LOGIN_PANEL";
