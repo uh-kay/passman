@@ -58,7 +58,7 @@ public class LoginSystem extends JFrame {
         cardPanel.add(registrationPanel, REGISTER_PANEL);
         
         // Add components to frame
-        add(navPanel, BorderLayout.WEST);
+        add(navPanel, BorderLayout.SOUTH);
         add(cardPanel, BorderLayout.CENTER);
         
         // Show login panel by default
@@ -67,9 +67,9 @@ public class LoginSystem extends JFrame {
     
     private JPanel createNavigationPanel() {
         JPanel navPanel = new JPanel();
-        navPanel.setLayout(new GridLayout(3, 1, 10, 10));
+        navPanel.setLayout(new GridLayout(1, 2, 10, 10));
         navPanel.setBackground(Config.PRIMARY_COLOR);
-        navPanel.setPreferredSize(new Dimension(150, getHeight()));
+        navPanel.setPreferredSize(new Dimension(getWidth(), 40));
 
         JButton loginBtn = new JButton("Login");
         JButton registerBtn = new JButton("Register");
