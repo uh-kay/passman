@@ -60,7 +60,7 @@ public class DashboardForm extends JFrame {
     private JPanel createNavPanel() {
         JPanel navPanel = new JPanel();
         navPanel.setLayout(new GridLayout(2, 1, 10, 10));
-        navPanel.setBackground(UIConfig.PRIMARY_COLOR);
+        navPanel.setBackground(Config.PRIMARY_COLOR);
         navPanel.setPreferredSize(new Dimension(150, getHeight()));
 
         JButton viewButton = new JButton("View");
@@ -79,14 +79,14 @@ public class DashboardForm extends JFrame {
     }
 
     private void styleButton(JButton button) {
-        button.setBackground(UIConfig.PRIMARY_COLOR);
+        button.setBackground(Config.PRIMARY_COLOR);
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setOpaque(true);
-        button.setFont(UIConfig.BUTTON_FONT);
+        button.setFont(Config.BUTTON_FONT);
         button.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(UIConfig.SECONDARY_COLOR, 2),
+            BorderFactory.createLineBorder(Config.SECONDARY_COLOR, 2),
             BorderFactory.createEmptyBorder(5, 15, 5, 15)
         ));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
