@@ -1,6 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
+import java.util.Properties;
 
 public class LoginSystem extends JFrame {
     private JPanel cardPanel;
@@ -16,16 +17,11 @@ public class LoginSystem extends JFrame {
     private JPasswordField regConfirmPasswordField;
     
     // Database configuration constants
-    private static final String DB_URL = "jdbc:mysql://localhost:3306/pos_db";
-    private static final String DB_USER = "root";
-    private static final String DB_PASSWORD = "1234";
-    private static final String DB_DRIVER = "com.mysql.cj.jdbc.Driver";
-    
-    // UI constants
-    private static final Color PRIMARY_COLOR = new Color(0, 102, 255);
-    private static final Color SECONDARY_COLOR = new Color(0, 51, 204);
-    private static final Font BUTTON_FONT = new Font("Arial", Font.BOLD, 14);
-    private static final Font TITLE_FONT = new Font("Arial", Font.BOLD, 18);
+    private static Properties properties = new Properties();
+    private static final String DB_URL = properties.getProperty("db.url");
+    private static final String DB_USER = properties.getProperty("db.user");
+    private static final String DB_PASSWORD = properties.getProperty("db.password");
+    private static final String DB_DRIVER = properties.getProperty("db.driver");
     
     // Card identifiers
     private static final String LOGIN_PANEL = "LOGIN_PANEL";
@@ -71,7 +67,7 @@ public class LoginSystem extends JFrame {
     private JPanel createNavigationPanel() {
         JPanel navPanel = new JPanel();
         navPanel.setLayout(new GridLayout(3, 1, 10, 10));
-        navPanel.setBackground(PRIMARY_COLOR);
+        navPanel.setBackground(UIConfig.PRIMARY_COLOR);
         navPanel.setPreferredSize(new Dimension(150, getHeight()));
 
         JButton loginBtn = new JButton("Login");
@@ -94,7 +90,7 @@ public class LoginSystem extends JFrame {
         loginPanel.setLayout(new GridBagLayout());
         loginPanel.setBackground(Color.WHITE);
         loginPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(PRIMARY_COLOR, 2),
+            BorderFactory.createLineBorder(UIConfig.PRIMARY_COLOR, 2),
             BorderFactory.createEmptyBorder(15, 15, 15, 15)
         ));
         
@@ -104,7 +100,7 @@ public class LoginSystem extends JFrame {
 
         // Add title
         JLabel titleLabel = new JLabel("Login");
-        titleLabel.setFont(TITLE_FONT);
+        titleLabel.setFont(UIConfig.TITLE_FONT);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -147,7 +143,7 @@ public class LoginSystem extends JFrame {
         registrationPanel.setLayout(new GridBagLayout());
         registrationPanel.setBackground(Color.WHITE);
         registrationPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(PRIMARY_COLOR, 2),
+            BorderFactory.createLineBorder(UIConfig.PRIMARY_COLOR, 2),
             BorderFactory.createEmptyBorder(15, 15, 15, 15)
         ));
         
@@ -157,7 +153,7 @@ public class LoginSystem extends JFrame {
 
         // Add title
         JLabel titleLabel = new JLabel("Create New Account");
-        titleLabel.setFont(TITLE_FONT);
+        titleLabel.setFont(UIConfig.TITLE_FONT);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -210,14 +206,14 @@ public class LoginSystem extends JFrame {
     }
     
     private void styleButton(JButton button) {
-        button.setBackground(PRIMARY_COLOR);
+        button.setBackground(UIConfig.PRIMARY_COLOR);
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setOpaque(true);
-        button.setFont(BUTTON_FONT);
+        button.setFont(UIConfig.BUTTON_FONT);
         button.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(SECONDARY_COLOR, 2),
+            BorderFactory.createLineBorder(UIConfig.SECONDARY_COLOR, 2),
             BorderFactory.createEmptyBorder(5, 15, 5, 15)
         ));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
