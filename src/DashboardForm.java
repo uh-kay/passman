@@ -51,7 +51,7 @@ public class DashboardForm extends JFrame {
 
         JPanel navPanel = createNavPanel();
 
-        add(navPanel, BorderLayout.WEST);
+        add(navPanel, BorderLayout.SOUTH);
         add(cardPanel, BorderLayout.CENTER);
 
         cardLayout.show(cardPanel, VIEW_PANEL);
@@ -59,9 +59,9 @@ public class DashboardForm extends JFrame {
 
     private JPanel createNavPanel() {
         JPanel navPanel = new JPanel();
-        navPanel.setLayout(new GridLayout(2, 1, 10, 10));
+        navPanel.setLayout(new GridLayout(1, 2, 10, 10));
         navPanel.setBackground(Config.PRIMARY_COLOR);
-        navPanel.setPreferredSize(new Dimension(150, getHeight()));
+        navPanel.setPreferredSize(new Dimension(getWidth(), 40));
 
         JButton viewButton = new JButton("View");
         JButton addButton = new JButton("Add");
