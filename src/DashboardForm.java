@@ -1,25 +1,6 @@
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.ObjectInputFilter.Config;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.Properties;
+import java.awt.*;
+import java.sql.*;
 
 public class DashboardForm extends JFrame {
     private JPanel cardPanel;
@@ -90,7 +71,7 @@ public class DashboardForm extends JFrame {
         addPanel.setLayout(new GridBagLayout());
         addPanel.setBackground(Color.WHITE);
         addPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(UIConfig.PRIMARY_COLOR, 2),
+            BorderFactory.createLineBorder(Config.PRIMARY_COLOR, 2),
             BorderFactory.createEmptyBorder(15, 15, 15, 15)
             ));
         
@@ -105,7 +86,7 @@ public class DashboardForm extends JFrame {
         JButton addButton = new JButton("add");
         styleButton(addButton);
         
-        titLabel.setFont(UIConfig.TITLE_FONT);
+        titLabel.setFont(Config.TITLE_FONT);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
