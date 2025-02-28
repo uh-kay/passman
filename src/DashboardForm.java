@@ -39,7 +39,7 @@ public class DashboardForm extends JFrame {
     
     private void initializeFrame() {
         setTitle("Admin DashboardForm");
-        setSize(600, 400);
+        setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());

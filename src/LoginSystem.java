@@ -87,10 +87,6 @@ public class LoginSystem extends JFrame {
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(new GridBagLayout());
         loginPanel.setBackground(Color.WHITE);
-        loginPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Config.PRIMARY_COLOR, 2),
-            BorderFactory.createEmptyBorder(15, 15, 15, 15)
-        ));
         
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -125,9 +121,9 @@ public class LoginSystem extends JFrame {
         loginPanel.add(loginPasswordField, gbc);
 
         // Add login button
-        gbc.gridx = 0;
+        gbc.gridx = 1;
         gbc.gridy = 3;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 1;
         loginPanel.add(loginButton, gbc);
 
         // Add action listener
