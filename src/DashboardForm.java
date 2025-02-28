@@ -22,11 +22,10 @@ public class DashboardForm extends JFrame {
     private CardLayout cardLayout;
 
     // Database configuration constants
-    private static Properties properties = new Properties();
-    private static final String DB_URL = properties.getProperty("db.url");
-    private static final String DB_USER = properties.getProperty("db.user");
-    private static final String DB_PASSWORD = properties.getProperty("db.password");
-    private static final String DB_DRIVER = properties.getProperty("db.driver");
+    private static final String DB_URL = Config.get("DB_URL");
+    private static final String DB_USER = Config.get("DB_USER");
+    private static final String DB_PASSWORD = Config.get("DB_PASSWORD");
+    private static final String DB_DRIVER = Config.get("DB_DRIVER");
 
     // Card identifiers
     private static final String VIEW_PANEL = "VIEW_PANEL";
@@ -92,6 +91,42 @@ public class DashboardForm extends JFrame {
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
         button.setPreferredSize(new Dimension(120, 40));
     }
+
+    private Connection createDatabaseConnection() throws SQLException, ClassNotFoundException {
+        Class.forName(DB_DRIVER);
+        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
+    }
+
+    private boolean insertPassword(String title, String username, String password)
+        throws SQLException, ClassNotFoundException {
+            
+            String title = addTitleField.getText();
+            String username = addUsernameFIeld.getText();
+            String password = new String(addPasswordField.getPassword());
+
+            String query = "INSERT INTO passwords (title, username, password) VALUES (?, ?, ?)";
+
+            try (Connection connection = createDatabaseConnection();
+            PreparedStatement statement = connection.prepareStatement(query)) {
+                statement.setString(1, title);
+                statement.setString(2, username);
+                statement.setString(3, password);
+
+                int rowsAffected = statement.executeUpdate();
+                return rowsAffected > 0;
+            } catch (SQLException | ClassNotFoundException e) {
+                handleDatabaseError(e);
+            }
+        }
+
+        private void handleDatabaseError(Exception e) {
+            JOptionPane.showMessageDialog(this, 
+                "Database Error: " + e.getMessage(), 
+                "Connection Error", 
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+
 
     public static void main(String[] args) {
         new DashboardForm().setVisible(true);

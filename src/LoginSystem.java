@@ -347,18 +347,18 @@ public class LoginSystem extends JFrame {
     }
     
     private boolean insertNewUser(String username, String password) 
-            throws SQLException, ClassNotFoundException {
-        String query = "INSERT INTO users (username, password) VALUES (?, ?)";
+        throws SQLException, ClassNotFoundException {
+            String query = "INSERT INTO users (username, password) VALUES (?, ?)";
         
-        try (Connection connection = createDatabaseConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
-            
-            statement.setString(1, username);
-            statement.setString(2, password);
-            
-            int rowsAffected = statement.executeUpdate();
-            return rowsAffected > 0;
-        }
+            try (Connection connection = createDatabaseConnection();
+                PreparedStatement statement = connection.prepareStatement(query)) {
+                
+                statement.setString(1, username);
+                statement.setString(2, password);
+                
+                int rowsAffected = statement.executeUpdate();
+                return rowsAffected > 0;
+            }
     }
     
     private void clearRegistrationFields() {
