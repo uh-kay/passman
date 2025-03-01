@@ -4,7 +4,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
-public class Config {
+public class AppConfig {
     private static final Properties properties = new Properties();
 
     static {

@@ -16,10 +16,10 @@ public class LoginSystem extends JFrame {
     private JPasswordField regConfirmPasswordField;
 
     // Database configuration constants
-    private static final String DB_URL = Config.get("DB_URL");
-    private static final String DB_USER = Config.get("DB_USER");
-    private static final String DB_PASSWORD = Config.get("DB_PASSWORD");
-    private static final String DB_DRIVER = Config.get("DB_DRIVER");
+    private static final String DB_URL = AppConfig.get("DB_URL");
+    private static final String DB_USER = AppConfig.get("DB_USER");
+    private static final String DB_PASSWORD = AppConfig.get("DB_PASSWORD");
+    private static final String DB_DRIVER = AppConfig.get("DB_DRIVER");
 
     // Card identifiers
     private static final String LOGIN_PANEL = "LOGIN_PANEL";
@@ -65,7 +65,7 @@ public class LoginSystem extends JFrame {
     private JPanel createNavigationPanel() {
         JPanel navPanel = new JPanel();
         navPanel.setLayout(new GridLayout(1, 2, 10, 10));
-        navPanel.setBackground(Config.PRIMARY_COLOR);
+        navPanel.setBackground(AppConfig.PRIMARY_COLOR);
         navPanel.setPreferredSize(new Dimension(getWidth(), 40));
 
         JButton loginBtn = new JButton("Login");
@@ -94,7 +94,7 @@ public class LoginSystem extends JFrame {
 
         // Add title
         JLabel titleLabel = new JLabel("Login");
-        titleLabel.setFont(Config.TITLE_FONT);
+        titleLabel.setFont(AppConfig.TITLE_FONT);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -136,10 +136,6 @@ public class LoginSystem extends JFrame {
         JPanel registrationPanel = new JPanel();
         registrationPanel.setLayout(new GridBagLayout());
         registrationPanel.setBackground(Color.WHITE);
-        registrationPanel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Config.PRIMARY_COLOR, 2),
-            BorderFactory.createEmptyBorder(15, 15, 15, 15)
-        ));
         
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
@@ -147,7 +143,7 @@ public class LoginSystem extends JFrame {
 
         // Add title
         JLabel titleLabel = new JLabel("Create New Account");
-        titleLabel.setFont(Config.TITLE_FONT);
+        titleLabel.setFont(AppConfig.TITLE_FONT);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -200,14 +196,14 @@ public class LoginSystem extends JFrame {
     }
     
     private void styleButton(JButton button) {
-        button.setBackground(Config.PRIMARY_COLOR);
+        button.setBackground(AppConfig.PRIMARY_COLOR);
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
         button.setBorderPainted(false);
         button.setOpaque(true);
-        button.setFont(Config.BUTTON_FONT);
+        button.setFont(AppConfig.BUTTON_FONT);
         button.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Config.SECONDARY_COLOR, 2),
+            BorderFactory.createLineBorder(AppConfig.SECONDARY_COLOR, 2),
             BorderFactory.createEmptyBorder(5, 15, 5, 15)
         ));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -311,9 +307,9 @@ public class LoginSystem extends JFrame {
         }
         
         // Check password length
-        if (regPasswordField.getPassword().length < 6) {
+        if (regPasswordField.getPassword().length < 4) {
             JOptionPane.showMessageDialog(this, 
-                "Password must be at least 6 characters long.", 
+                "Password must be at least 4 characters long.", 
                 "Validation Error", 
                 JOptionPane.WARNING_MESSAGE);
             return false;
