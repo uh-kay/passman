@@ -5,15 +5,9 @@ import java.sql.*;
 public class DashboardForm extends JFrame {
     private JPanel cardPanel;
     private CardLayout cardLayout;
-    private JTextField addUsernameField;
-    private JTextField addTitleField;
-    private JPasswordField addPasswordField;
-
-    // Database configuration constants
-    private static final String DB_URL = AppConfig.get("DB_URL");
-    private static final String DB_USER = AppConfig.get("DB_USER");
-    private static final String DB_PASSWORD = AppConfig.get("DB_PASSWORD");
-    private static final String DB_DRIVER = AppConfig.get("DB_DRIVER");
+    public JTextField addUsernameField;
+    public JTextField addTitleField;
+    public JPasswordField addPasswordField;
 
     // Card identifiers
     private static final String VIEW_PANEL = "VIEW_PANEL";
@@ -57,8 +51,8 @@ public class DashboardForm extends JFrame {
         JButton viewButton = new JButton("View");
         JButton addButton = new JButton("Add");
 
-        styleButton(viewButton);
-        styleButton(addButton);
+        AppConfig.styleButton(viewButton);
+        AppConfig.styleButton(addButton);
 
         viewButton.addActionListener(_ -> cardLayout.show(cardPanel, VIEW_PANEL));
         addButton.addActionListener(_ -> cardLayout.show(cardPanel, ADD_PANEL));
@@ -83,7 +77,7 @@ public class DashboardForm extends JFrame {
         addUsernameField = new JTextField(20);
         addPasswordField = new JPasswordField(20);
         JButton addButton = new JButton("Add");
-        styleButton(addButton);
+        AppConfig.styleButton(addButton);
         
         titLabel.setFont(AppConfig.TITLE_FONT);
         gbc.gridx = 0;
@@ -114,75 +108,18 @@ public class DashboardForm extends JFrame {
         gbc.gridwidth = 1;
         addPanel.add(addButton, gbc);
 
+        AppConnection appConnection = new AppConnection();
+
         addButton.addActionListener(_ -> {
             try {
-                insertPassword();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            } catch (SQLException e) {
-                e.printStackTrace();
+                appConnection.insertPassword(this);
+            } catch (SQLException | ClassNotFoundException e) {
+                appConnection.handleDatabaseError(e);
             }
         });
 
         return addPanel;
     }
-
-    // private JPanel createViewPanel() {
-    //     JPanel viewPanel = new JPanel();
-    //     viewPanel.setLayout(new GridBagLayout());
-    // }
-
-    private void styleButton(JButton button) {
-        button.setBackground(AppConfig.PRIMARY_COLOR);
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorderPainted(false);
-        button.setOpaque(true);
-        button.setFont(AppConfig.BUTTON_FONT);
-        button.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(AppConfig.SECONDARY_COLOR, 2),
-            BorderFactory.createEmptyBorder(5, 15, 5, 15)
-        ));
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setPreferredSize(new Dimension(120, 40));
-    }
-
-    private Connection createDatabaseConnection() throws SQLException, ClassNotFoundException {
-        Class.forName(DB_DRIVER);
-        return DriverManager.getConnection(DB_URL, DB_USER, DB_PASSWORD);
-    }
-
-    private boolean insertPassword()
-        throws SQLException, ClassNotFoundException {
-            
-            String title = addTitleField.getText();
-            String username = addUsernameField.getText();
-            String password = new String(addPasswordField.getPassword());
-
-            String query = "INSERT INTO passwords (title, username, password) VALUES (?, ?, ?)";
-
-            try (Connection connection = createDatabaseConnection();
-            PreparedStatement statement = connection.prepareStatement(query)) {
-                statement.setString(1, title);
-                statement.setString(2, username);
-                statement.setString(3, password);
-
-                int rowsAffected = statement.executeUpdate();
-                return rowsAffected > 0;
-            } catch (SQLException | ClassNotFoundException e) {
-                handleDatabaseError(e);
-                return false;
-            }
-    }
-
-    private void handleDatabaseError(Exception e) {
-        JOptionPane.showMessageDialog(this, 
-            "Database Error: " + e.getMessage(), 
-            "Connection Error", 
-            JOptionPane.ERROR_MESSAGE);
-        e.printStackTrace();
-    }
-
 
     public static void main(String[] args) {
         new DashboardForm().setVisible(true);
