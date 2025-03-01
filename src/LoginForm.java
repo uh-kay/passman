@@ -5,11 +5,11 @@ public class LoginForm extends JFrame {
     JTextField loginUsernameField;
     JPasswordField loginPasswordField;
 
-    public JPanel createLoginPanel() {
+    public JPanel createLoginPanel(AuthenticationManager authenticationManager) {
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(new GridBagLayout());
         loginPanel.setBackground(Color.WHITE);
-        
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -50,13 +50,12 @@ public class LoginForm extends JFrame {
 
         // Add action listener
         AppConnection appConnection = new AppConnection();
-        loginButton.addActionListener(_ -> appConnection.authenticate(this));
-        
-        return loginPanel;
-    }
+        loginButton.addActionListener(_ -> {
+            if (appConnection.authenticate(this)) {
+                authenticationManager.openDashboard();
+            }
+        });
 
-    public void openDashboard() {
-        new DashboardForm().setVisible(true);
-        this.dispose();
+        return loginPanel;
     }
 }
