@@ -11,7 +11,7 @@ public class EditForm {
 
     AppConfig appConfig = new AppConfig();
 
-    public JPanel createAddPanel() {
+    public JPanel createEditPanel() {
         JPanel editPanel = new JPanel();
         editPanel.setLayout(new GridBagLayout());
         editPanel.setBackground(Color.WHITE);
@@ -25,6 +25,7 @@ public class EditForm {
         editUsernameField = new JTextField(20);
         editPasswordField = new JPasswordField(20);
         editDomainField = new JTextField(20);
+        editTagsField = new JTextField(20);
         JButton editButton = new JButton("Edit");
         appConfig.styleButton(editButton, appConfig);
         
@@ -59,13 +60,13 @@ public class EditForm {
         editPanel.add(editDomainField, gbc);
 
         gbc.gridx = 0;
-        gbc.gridy = 4;
-        editPanel.add(new JLabel("Tags: "), gbc);
+        gbc.gridy = 5;
+        editPanel.add(new JLabel("Tag: "), gbc);
         gbc.gridx = 1;
         editPanel.add(editTagsField, gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.gridwidth = 1;
         editPanel.add(editButton, gbc);
 

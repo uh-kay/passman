@@ -32,8 +32,10 @@ public class DashboardForm extends JFrame {
         JPanel navPanel = createNavPanel();
 
         JPanel addPanel = new AddForm().createAddPanel();
+        JPanel editPanel = new EditForm().createEditPanel();
 
         cardPanel.add(addPanel, ADD_PANEL);
+        cardPanel.add(editPanel, EDIT_PANEL);
 
 
         add(navPanel, BorderLayout.SOUTH);
@@ -62,6 +64,7 @@ public class DashboardForm extends JFrame {
 
         navPanel.add(viewButton);
         navPanel.add(addButton);
+        navPanel.add(editButton);
 
         return navPanel;
     }
