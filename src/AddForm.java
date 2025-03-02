@@ -7,6 +7,7 @@ public class AddForm {
     public JTextField addTitleField;
     public JPasswordField addPasswordField;
     public JTextField addDomainField;
+    public JTextField addTagField;
 
     AppConfig appConfig = new AppConfig();
 
@@ -24,6 +25,7 @@ public class AddForm {
         addUsernameField = new JTextField(20);
         addPasswordField = new JPasswordField(20);
         addDomainField = new JTextField(20);
+        addTagField = new JTextField(20);
         JButton addButton = new JButton("Add");
         appConfig.styleButton(addButton, appConfig);
         
@@ -57,8 +59,14 @@ public class AddForm {
         gbc.gridx = 1;
         addPanel.add(addDomainField, gbc);
 
-        gbc.gridx = 1;
+        gbc.gridx = 0;
         gbc.gridy = 5;
+        addPanel.add(new JLabel("Tag: "), gbc);
+        gbc.gridx = 1;
+        addPanel.add(addTagField, gbc);
+
+        gbc.gridx = 1;
+        gbc.gridy = 6;
         gbc.gridwidth = 1;
         addPanel.add(addButton, gbc);
 
