@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class AuthenticationManager extends JFrame {
+public class AuthenticationForm extends JFrame {
     public static JPanel cardPanel;
     public static CardLayout cardLayout;
 
@@ -9,13 +9,15 @@ public class AuthenticationManager extends JFrame {
     public static final String LOGIN_PANEL = "LOGIN_PANEL";
     public static final String REGISTER_PANEL = "REGISTER_PANEL";
 
-    public AuthenticationManager() {
+    AppConfig appConfig = new AppConfig();
+
+    public AuthenticationForm() {
         initializeFrame();
         setupCardLayout();
     }
 
     public void initializeFrame() {
-        setTitle("Login System");
+        setTitle("Passman");
         setSize(800, 600);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
@@ -51,14 +53,14 @@ public class AuthenticationManager extends JFrame {
     private JPanel createNavigationPanel() {
         JPanel navPanel = new JPanel();
         navPanel.setLayout(new GridLayout(1, 2, 10, 10));
-        navPanel.setBackground(AppConfig.PRIMARY_COLOR);
+        navPanel.setBackground(appConfig.PRIMARY_COLOR);
         navPanel.setPreferredSize(new Dimension(getWidth(), 40));
 
         JButton loginBtn = new JButton("Login");
         JButton registerBtn = new JButton("Register");
 
-        AppConfig.styleButton(loginBtn);
-        AppConfig.styleButton(registerBtn);
+        appConfig.styleButton(loginBtn, appConfig);
+        appConfig.styleButton(registerBtn, appConfig);
 
         loginBtn.addActionListener(_ -> cardLayout.show(cardPanel, LOGIN_PANEL));
         registerBtn.addActionListener(_ -> cardLayout.show(cardPanel, REGISTER_PANEL));
@@ -76,7 +78,7 @@ public class AuthenticationManager extends JFrame {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
-            new AuthenticationManager().setVisible(true);
+            new AuthenticationForm().setVisible(true);
         });
     }
 }

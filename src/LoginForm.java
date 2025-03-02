@@ -5,7 +5,9 @@ public class LoginForm extends JFrame {
     JTextField loginUsernameField;
     JPasswordField loginPasswordField;
 
-    public JPanel createLoginPanel(AuthenticationManager authenticationManager) {
+    AppConfig appConfig = new AppConfig();
+
+    public JPanel createLoginPanel(AuthenticationForm authenticationForm) {
         JPanel loginPanel = new JPanel();
         loginPanel.setLayout(new GridBagLayout());
         loginPanel.setBackground(Color.WHITE);
@@ -16,7 +18,7 @@ public class LoginForm extends JFrame {
 
         // Add title
         JLabel titleLabel = new JLabel("Login");
-        titleLabel.setFont(AppConfig.TITLE_FONT);
+        titleLabel.setFont(appConfig.TITLE_FONT);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -26,7 +28,7 @@ public class LoginForm extends JFrame {
         loginUsernameField = new JTextField(20);
         loginPasswordField = new JPasswordField(20);
         JButton loginButton = new JButton("Login");
-        AppConfig.styleButton(loginButton);
+        appConfig.styleButton(loginButton, appConfig);
 
         // Add username field
         gbc.gridy = 1;
@@ -44,7 +46,7 @@ public class LoginForm extends JFrame {
 
         // Add login button
         gbc.gridx = 1;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.gridwidth = 1;
         loginPanel.add(loginButton, gbc);
 
@@ -52,7 +54,7 @@ public class LoginForm extends JFrame {
         AppConnection appConnection = new AppConnection();
         loginButton.addActionListener(_ -> {
             if (appConnection.authenticate(this)) {
-                authenticationManager.openDashboard();
+                authenticationForm.openDashboard();
             }
         });
 

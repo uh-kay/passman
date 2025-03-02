@@ -3,10 +3,12 @@ import java.awt.*;
 import java.sql.*;
 
 public class RegisterForm extends JFrame {
-    private static final String DB_URL = AppConfig.get("DB_URL");
-    private static final String DB_USER = AppConfig.get("DB_USER");
-    private static final String DB_PASSWORD = AppConfig.get("DB_PASSWORD");
-    private static final String DB_DRIVER = AppConfig.get("DB_DRIVER");
+    AppConfig appConfig = new AppConfig();
+
+    private final String DB_URL = appConfig.get("DB_URL");
+    private final String DB_USER = appConfig.get("DB_USER");
+    private final String DB_PASSWORD = appConfig.get("DB_PASSWORD");
+    private final String DB_DRIVER = appConfig.get("DB_DRIVER");
 
     private JTextField regUsernameField;
     private JPasswordField regPasswordField;
@@ -23,7 +25,7 @@ public class RegisterForm extends JFrame {
 
         // Add title
         JLabel titleLabel = new JLabel("Create New Account");
-        titleLabel.setFont(AppConfig.TITLE_FONT);
+        titleLabel.setFont(appConfig.TITLE_FONT);
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
@@ -36,8 +38,8 @@ public class RegisterForm extends JFrame {
         JButton registerButton = new JButton("Register");
         JButton clearButton = new JButton("Clear");
         
-        AppConfig.styleButton(registerButton);
-        AppConfig.styleButton(clearButton);
+        appConfig.styleButton(registerButton, appConfig);
+        appConfig.styleButton(clearButton, appConfig);
 
         gbc.gridy = 1;
         gbc.gridwidth = 1;
@@ -98,7 +100,7 @@ public class RegisterForm extends JFrame {
                     "Registration Success", 
                     JOptionPane.INFORMATION_MESSAGE);
                 clearRegistrationFields();
-                AuthenticationManager.cardLayout.show(AuthenticationManager.cardPanel, AuthenticationManager.LOGIN_PANEL);
+                AuthenticationForm.cardLayout.show(AuthenticationForm.cardPanel, AuthenticationForm.LOGIN_PANEL);
             }
         } catch (SQLException | ClassNotFoundException e) {
             handleDatabaseError(e);

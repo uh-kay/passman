@@ -2,10 +2,12 @@ import java.sql.*;
 import javax.swing.JOptionPane;
 
 public class AppConnection {
-    private static final String DB_URL = AppConfig.get("DB_URL");
-    private static final String DB_USER = AppConfig.get("DB_USER");
-    private static final String DB_PASSWORD = AppConfig.get("DB_PASSWORD");
-    private static final String DB_DRIVER = AppConfig.get("DB_DRIVER");
+    AppConfig appConfig = new AppConfig();
+
+    private final String DB_URL = appConfig.get("DB_URL");
+    private final String DB_USER = appConfig.get("DB_USER");
+    private final String DB_PASSWORD = appConfig.get("DB_PASSWORD");
+    private final String DB_DRIVER = appConfig.get("DB_DRIVER");
 
     public boolean authenticate(LoginForm loginForm) {
         String username = loginForm.loginUsernameField.getText();
@@ -57,23 +59,80 @@ public class AppConnection {
         e.printStackTrace();
     }
 
-    public boolean insertPassword(DashboardForm dashboardForm)
+    public boolean insertPassword(AddForm addForm)
             throws SQLException, ClassNotFoundException {
 
-        String title = dashboardForm.addTitleField.getText();
-        String username = dashboardForm.addUsernameField.getText();
-        String password = new String(dashboardForm.addPasswordField.getPassword());
+        String title = addForm.addTitleField.getText();
+        String username = addForm.addUsernameField.getText();
+        String password = new String(addForm.addPasswordField.getPassword());
+        String domain = addForm.addDomainField.getText();
 
-        String query = "INSERT INTO passwords (title, username, password) VALUES (?, ?, ?)";
+        Connection connection = null;
+        PreparedStatement passwordStatement = null;
+        PreparedStatement domainStatement = null;
+        ResultSet generatedKeys = null;
 
-        try (Connection connection = createDatabaseConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
-            statement.setString(1, title);
-            statement.setString(2, username);
-            statement.setString(3, password);
+        try {
+            connection = createDatabaseConnection();
+            connection.setAutoCommit(false);
 
-            int rowsAffected = statement.executeUpdate();
+            int domainId;
+            String domainQuery = "SELECT id FROM domains WHERE domain = ?";
+            domainStatement = connection.prepareStatement(domainQuery);
+            domainStatement.setString(1, domain);
+            ResultSet domainResult = domainStatement.executeQuery();
+
+            if (domainResult.next()) {
+                domainId = domainResult.getInt("id");
+            } else {
+                domainStatement.close();
+                domainStatement = connection.prepareStatement(
+                    "INSERT INTO domains (domain) VALUES (?)", 
+                    Statement.RETURN_GENERATED_KEYS
+                );
+                domainStatement.setString(1, domain);
+                domainStatement.executeUpdate();
+
+                generatedKeys = domainStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    domainId = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Failed to get generated domain ID");
+                }
+            }
+
+            String passwordQuery = "INSERT INTO passwords (title, username, password, domain_id) VALUES (?, ?, ?, ?)";
+            passwordStatement = connection.prepareStatement(passwordQuery);
+            passwordStatement.setString(1, title);
+            passwordStatement.setString(2, username);
+            passwordStatement.setString(3, password);
+            passwordStatement.setInt(4, domainId);
+
+            int rowsAffected = passwordStatement.executeUpdate();
+
+            connection.commit();
+
             return rowsAffected > 0;
+        } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
+            }
+
+            throw e;
+        } finally {
+            if (generatedKeys != null) try { generatedKeys.close(); } catch (SQLException e) { /* ignored */ }
+            if (domainStatement != null) try { domainStatement.close(); } catch (SQLException e) { /* ignored */ }
+            if (passwordStatement != null) try { passwordStatement.close(); } catch (SQLException e) { /* ignored */ }
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);  // Reset auto-commit
+                    connection.close();
+                } catch (SQLException e) { /* ignored */ }
+            }
         }
     }
 }
