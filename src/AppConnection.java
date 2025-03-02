@@ -135,4 +135,82 @@ public class AppConnection {
             }
         }
     }
+
+    public boolean editPassword(EditForm editForm)
+        throws SQLException, ClassNotFoundException {
+
+    String title = editForm.editTitleField.getText();
+    String username = editForm.editUsernameField.getText();
+    String password = new String(editForm.editPasswordField.getPassword());
+    String domain = editForm.editDomainField.getText();
+
+    Connection connection = null;
+    PreparedStatement passwordStatement = null;
+    PreparedStatement domainStatement = null;
+    ResultSet generatedKeys = null;
+
+    try {
+        connection = createDatabaseConnection();
+        connection.setAutoCommit(false);
+
+        int domainId;
+        String domainQuery = "SELECT id FROM domains WHERE domain = ?";
+        domainStatement = connection.prepareStatement(domainQuery);
+        domainStatement.setString(1, domain);
+        ResultSet domainResult = domainStatement.executeQuery();
+
+        if (domainResult.next()) {
+            domainId = domainResult.getInt("id");
+        } else {
+            domainStatement.close();
+            domainStatement = connection.prepareStatement(
+                "INSERT INTO domains (domain) VALUES (?)", 
+                Statement.RETURN_GENERATED_KEYS
+            );
+            domainStatement.setString(1, domain);
+            domainStatement.executeUpdate();
+
+            generatedKeys = domainStatement.getGeneratedKeys();
+            if (generatedKeys.next()) {
+                domainId = generatedKeys.getInt(1);
+            } else {
+                throw new SQLException("Failed to get generated domain ID");
+            }
+        }
+
+        String updateQuery = "UPDATE passwords SET title = ?, username = ?, password = ?, domain_id = ? WHERE id = ?";
+        passwordStatement = connection.prepareStatement(updateQuery);
+        passwordStatement.setString(1, title);
+        passwordStatement.setString(2, username);
+        passwordStatement.setString(3, password);
+        passwordStatement.setInt(4, domainId);
+
+        int rowsAffected = passwordStatement.executeUpdate();
+
+        connection.commit();
+
+        return rowsAffected > 0;
+    } catch (SQLException e) {
+        if (connection != null) {
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+
+        throw e;
+    } finally {
+        if (generatedKeys != null) try { generatedKeys.close(); } catch (SQLException e) { /* ignored */ }
+        if (domainStatement != null) try { domainStatement.close(); } catch (SQLException e) { /* ignored */ }
+        if (passwordStatement != null) try { passwordStatement.close(); } catch (SQLException e) { /* ignored */ }
+        if (connection != null) {
+            try {
+                connection.setAutoCommit(true);  // Reset auto-commit
+                connection.close();
+            } catch (SQLException e) { /* ignored */ }
+        }
+    }
+}
+
 }
