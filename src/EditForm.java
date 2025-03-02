@@ -26,7 +26,6 @@ public class EditForm {
         editPasswordField = new JPasswordField(20);
         editDomainField = new JTextField(20);
         JButton editButton = new JButton("Edit");
-        JButton cancelButton = new JButton("Cancel");
         appConfig.styleButton(editButton, appConfig);
         
         titLabel.setFont(appConfig.TITLE_FONT);
@@ -66,11 +65,6 @@ public class EditForm {
         addPanel.add(editTagsField, gbc);
 
         gbc.gridx = 1;
-        gbc.gridy = 5;
-        gbc.gridwidth = 1;
-        addPanel.add(cancelButton, gbc);
-
-        gbc.gridx = 2;
         gbc.gridy = 5;
         gbc.gridwidth = 1;
         addPanel.add(editButton, gbc);
