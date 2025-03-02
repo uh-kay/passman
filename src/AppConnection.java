@@ -66,10 +66,12 @@ public class AppConnection {
         String username = addForm.addUsernameField.getText();
         String password = new String(addForm.addPasswordField.getPassword());
         String domain = addForm.addDomainField.getText();
+        String tag = addForm.addTagField.getText();
 
         Connection connection = null;
         PreparedStatement passwordStatement = null;
         PreparedStatement domainStatement = null;
+        PreparedStatement tagStatement = null;
         ResultSet generatedKeys = null;
 
         try {
@@ -101,12 +103,38 @@ public class AppConnection {
                 }
             }
 
-            String passwordQuery = "INSERT INTO passwords (title, username, password, domain_id) VALUES (?, ?, ?, ?)";
+            int tagId;
+            String tagQuery = "SELECT id FROM tags WHERE name = ?";
+            tagStatement = connection.prepareStatement(tagQuery);
+            tagStatement.setString(1, tag);
+            ResultSet tagResult = tagStatement.executeQuery();
+
+            if (tagResult.next()) {
+                tagId = tagResult.getInt("id");
+            } else {
+                tagStatement.close();
+                tagStatement = connection.prepareStatement(
+                    "INSERT INTO tags (name) VALUES (?)",
+                    Statement.RETURN_GENERATED_KEYS
+                );
+                tagStatement.setString(1, tag);
+                tagStatement.executeUpdate();
+
+                generatedKeys = tagStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    tagId = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Failed to get generated tag ID");
+                }
+            }
+
+            String passwordQuery = "INSERT INTO passwords (title, username, password, domain_id, tag_id) VALUES (?, ?, ?, ?, ?)";
             passwordStatement = connection.prepareStatement(passwordQuery);
             passwordStatement.setString(1, title);
             passwordStatement.setString(2, username);
             passwordStatement.setString(3, password);
             passwordStatement.setInt(4, domainId);
+            passwordStatement.setInt(5, tagId);
 
             int rowsAffected = passwordStatement.executeUpdate();
 
@@ -126,6 +154,8 @@ public class AppConnection {
         } finally {
             if (generatedKeys != null) try { generatedKeys.close(); } catch (SQLException e) { /* ignored */ }
             if (domainStatement != null) try { domainStatement.close(); } catch (SQLException e) { /* ignored */ }
+            if (generatedKeys != null) try { generatedKeys.close(); } catch (SQLException e) { /* ignored */ }
+            if (tagStatement != null) try { domainStatement.close(); } catch (SQLException e) { /* ignored */ }
             if (passwordStatement != null) try { passwordStatement.close(); } catch (SQLException e) { /* ignored */ }
             if (connection != null) {
                 try {
