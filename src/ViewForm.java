@@ -18,7 +18,7 @@ public class ViewForm {
         GridBagConstraints gbc = new GridBagConstraints();
         
         // Create column names and data for the table
-        String[] columnNames = {"ID", "Title", "Username", "Password", "Domain", "Tag", "Creation Date", "Modified Date"};
+        String[] columnNames = {"Title", "Username", "Password", "Domain", "Tag", "Creation Date", "Modified Date"};
         
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -32,7 +32,7 @@ public class ViewForm {
         itemTable.setPreferredScrollableViewportSize(new Dimension(600, 400));
         itemTable.setFillsViewportHeight(true);
         
-        itemTable.getColumnModel().getColumn(3).setCellRenderer((tbl, _, isSelected, _, _, _) -> {
+        itemTable.getColumnModel().getColumn(2).setCellRenderer((tbl, _, isSelected, _, _, _) -> {
             JLabel label = new JLabel("********");
             if (isSelected) {
                 label.setBackground(tbl.getSelectionBackground());

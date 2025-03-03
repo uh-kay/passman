@@ -254,7 +254,7 @@ public class AppConnection {
             connection.setAutoCommit(false);
         
             // Create SQL query with JOINs to get domain and tag names
-            String sql = "SELECT p.id, p.title, p.username, p.password, " +
+            String sql = "SELECT p.title, p.username, p.password, " +
                             "d.domain as domain_name, t.name as tag_name, " +
                             "p.creationDate, p.modiifedDate " +
                             "FROM passwords p " +
@@ -273,7 +273,6 @@ public class AppConnection {
             // Add data from result set to table model
             while (rs.next()) {
                 Object[] row = {
-                    rs.getInt("id"),
                     rs.getString("title"),
                     rs.getString("username"),
                     rs.getString("password"),
