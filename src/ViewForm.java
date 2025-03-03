@@ -18,7 +18,7 @@ public class ViewForm {
         GridBagConstraints gbc = new GridBagConstraints();
         
         // Create column names and data for the table
-        String[] columnNames = {"Title", "Username", "Password", "Domain", "Tag", "Creation Date", "Modified Date"};
+        String[] columnNames = {"ID", "Title", "Username", "Password", "Domain", "Tag", "Creation Date", "Modified Date"};
         
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override

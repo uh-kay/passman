@@ -75,7 +75,7 @@ public class AddForm {
         addButton.addActionListener(_ -> {
             try {
                 appConnection.insertPassword(this);
-                // clearFields();
+                clearFields();
                 DashboardForm.refreshViewPanel();
                 DashboardForm.cardLayout.show(DashboardForm.cardPanel, DashboardForm.VIEW_PANEL);
             } catch (SQLException | ClassNotFoundException e) {
@@ -84,5 +84,13 @@ public class AddForm {
         });
 
         return addPanel;
+    }
+
+    private void clearFields() {
+        addTitleField.setText("");
+        addUsernameField.setText("");
+        addPasswordField.setText("");
+        addDomainField.setText("");
+        addTagField.setText("null");
     }
 }
