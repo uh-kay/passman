@@ -5,7 +5,7 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 public class ViewForm {
-    private JTable table;
+    private JTable itemTable;
     private DefaultTableModel tableModel;
 
     AppConfig appConfig = new AppConfig();
@@ -27,12 +27,12 @@ public class ViewForm {
             }
         };
 
-        table = new JTable(tableModel);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setPreferredScrollableViewportSize(new Dimension(600, 400));
-        table.setFillsViewportHeight(true);
+        itemTable = new JTable(tableModel);
+        itemTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        itemTable.setPreferredScrollableViewportSize(new Dimension(600, 400));
+        itemTable.setFillsViewportHeight(true);
         
-        table.getColumnModel().getColumn(3).setCellRenderer((tbl, value, isSelected, hasFocus, row, column) -> {
+        itemTable.getColumnModel().getColumn(3).setCellRenderer((tbl, _, isSelected, _, _, _) -> {
             JLabel label = new JLabel("********");
             if (isSelected) {
                 label.setBackground(tbl.getSelectionBackground());
@@ -43,7 +43,7 @@ public class ViewForm {
         });
 
         // Create a scroll pane for the table
-        JScrollPane scrollPane = new JScrollPane(table);
+        JScrollPane scrollPane = new JScrollPane(itemTable);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLUE));
         
         // Add the table to the layout
@@ -64,5 +64,13 @@ public class ViewForm {
         }
         
         return viewPanel;
+    }
+
+    public JTable getItemTable() {
+        return itemTable;
+    }
+
+    public DefaultTableModel getTableModel() {
+        return tableModel;
     }
 }

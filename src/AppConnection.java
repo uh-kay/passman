@@ -1,5 +1,6 @@
 import java.sql.*;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 public class AppConnection {
@@ -290,6 +291,83 @@ public class AppConnection {
                 "Error",
                 JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
+        }
+    }
+
+    public void deleteSelectedItem(ViewForm viewForm) {
+        if (viewForm == null) {
+            System.err.println("Error: ViewForm is null");
+            return;
+        }
+
+        JTable table = viewForm.getItemTable();
+
+        if (table == null) {
+            System.err.println("Error: Table reference is null in deleteSelectedItem");
+            JOptionPane.showMessageDialog(null, 
+                "Cannot delete: Table reference is invalid",
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int selectedRow = table.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(null, 
+                "Please select an item to delete",
+                "No Selection", 
+                JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+        
+        // Get the ID of the selected item
+        int itemId = (int) table.getValueAt(selectedRow, 0);
+        String itemName = (String) table.getValueAt(selectedRow, 1);
+        
+        // Confirm deletion
+        int confirmation = JOptionPane.showConfirmDialog(null,
+            "Are you sure you want to delete " + itemName + "?",
+            "Confirm Deletion",
+            JOptionPane.YES_NO_OPTION);
+        
+        if (confirmation == JOptionPane.YES_OPTION) {
+            // Delete from database
+            try {
+                if (deleteItemFromDatabase(itemId)) {
+                    // Remove from table model if delete was successful
+                    DefaultTableModel model = (DefaultTableModel) table.getModel();
+                    model.removeRow(selectedRow);
+                    JOptionPane.showMessageDialog(null, 
+                        "Item deleted successfully",
+                        "Success", 
+                        JOptionPane.INFORMATION_MESSAGE);
+                }
+            } catch (SQLException | ClassNotFoundException e) {
+                handleDatabaseError(e);
+            }
+        }
+    }
+    
+    private boolean deleteItemFromDatabase(int itemId)
+        throws SQLException, ClassNotFoundException {
+        Connection connection = createDatabaseConnection();
+        
+        String sql = "DELETE FROM passwords WHERE id = ?";
+        
+        try {
+            PreparedStatement statement = connection.prepareStatement(sql);
+            
+            statement.setInt(1, itemId);
+            int rowsAffected = statement.executeUpdate();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, 
+                "Failed to delete item: " + e.getMessage(),
+                "Database Error", 
+                JOptionPane.ERROR_MESSAGE);
+            return false;
         }
     }
 }

@@ -4,6 +4,8 @@ import java.awt.*;
 public class DashboardForm extends JFrame {
     private JPanel cardPanel;
     private CardLayout cardLayout;
+    private AppConnection appConnection;
+    private ViewForm viewForm;
 
     // Card identifiers
     private static final String VIEW_PANEL = "VIEW_PANEL";
@@ -29,9 +31,10 @@ public class DashboardForm extends JFrame {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
-        JPanel navPanel = createNavPanel();
-
-        JPanel viewPanel = new ViewForm().createViewPanel();
+        // Create a single instance of ViewForm
+        viewForm = new ViewForm();
+        JPanel viewPanel = viewForm.createViewPanel();
+        
         JPanel addPanel = new AddForm().createAddPanel();
         JPanel editPanel = new EditForm().createEditPanel();
 
@@ -39,6 +42,8 @@ public class DashboardForm extends JFrame {
         cardPanel.add(addPanel, ADD_PANEL);
         cardPanel.add(editPanel, EDIT_PANEL);
 
+        JPanel navPanel = createNavPanel();
+        
         add(navPanel, BorderLayout.SOUTH);
         add(cardPanel, BorderLayout.CENTER);
 
@@ -59,7 +64,9 @@ public class DashboardForm extends JFrame {
         appConfig.styleButton(addButton, appConfig);
         appConfig.styleButton(editButton, appConfig);
 
-        deleteButton.addActionListener(_ -> System.out.println("Deleted"));
+        appConnection = new AppConnection();
+
+        deleteButton.addActionListener(_ -> appConnection.deleteSelectedItem(viewForm));
         addButton.addActionListener(_ -> cardLayout.show(cardPanel, ADD_PANEL));
         editButton.addActionListener(_ -> cardLayout.show(cardPanel, EDIT_PANEL));
 
