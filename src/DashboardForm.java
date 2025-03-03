@@ -59,13 +59,23 @@ public class DashboardForm extends JFrame {
         navPanel.setBackground(appConfig.PRIMARY_COLOR);
         navPanel.setPreferredSize(new Dimension(getWidth(), 40));
 
-        JButton deleteButton = new JButton("Delete");
-        JButton addButton = new JButton("Add");
-        JButton editButton = new JButton("Edit");
+        Icon addIcon = new ImageIcon("assets\\add.png");
+        Icon deleteIcon = new ImageIcon("assets\\delete.png");
+        Icon editIcon = new ImageIcon("assets\\edit.png");
+        Icon copyUsernameIcon = new ImageIcon("assets\\username-copy.png");
+        Icon copyPasswordIcon = new ImageIcon("assets\\password-copy.png");
+
+        JButton deleteButton = new JButton(deleteIcon);
+        JButton addButton = new JButton(addIcon);
+        JButton editButton = new JButton(editIcon);
+        JButton copyPasswordButton = new JButton(copyPasswordIcon);
+        JButton copyUsernameButton = new JButton(copyUsernameIcon);
 
         appConfig.styleButton(deleteButton, appConfig);
         appConfig.styleButton(addButton, appConfig);
         appConfig.styleButton(editButton, appConfig);
+        appConfig.styleButton(copyPasswordButton, appConfig);
+        appConfig.styleButton(copyUsernameButton, appConfig);
 
         appConnection = new AppConnection();
 
@@ -73,9 +83,11 @@ public class DashboardForm extends JFrame {
         addButton.addActionListener(_ -> cardLayout.show(cardPanel, ADD_PANEL));
         editButton.addActionListener(_ -> cardLayout.show(cardPanel, EDIT_PANEL));
 
-        navPanel.add(deleteButton);
         navPanel.add(addButton);
+        navPanel.add(copyUsernameButton);
+        navPanel.add(copyPasswordButton);
         navPanel.add(editButton);
+        navPanel.add(deleteButton);
 
         return navPanel;
     }
