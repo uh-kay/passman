@@ -31,12 +31,13 @@ public class DashboardForm extends JFrame {
 
         JPanel navPanel = createNavPanel();
 
+        JPanel viewPanel = new ViewForm().createViewPanel();
         JPanel addPanel = new AddForm().createAddPanel();
         JPanel editPanel = new EditForm().createEditPanel();
 
+        cardPanel.add(viewPanel, VIEW_PANEL);
         cardPanel.add(addPanel, ADD_PANEL);
         cardPanel.add(editPanel, EDIT_PANEL);
-
 
         add(navPanel, BorderLayout.SOUTH);
         add(cardPanel, BorderLayout.CENTER);
@@ -50,19 +51,19 @@ public class DashboardForm extends JFrame {
         navPanel.setBackground(appConfig.PRIMARY_COLOR);
         navPanel.setPreferredSize(new Dimension(getWidth(), 40));
 
-        JButton viewButton = new JButton("View");
+        JButton deleteButton = new JButton("Delete");
         JButton addButton = new JButton("Add");
         JButton editButton = new JButton("Edit");
 
-        appConfig.styleButton(viewButton, appConfig);
+        appConfig.styleButton(deleteButton, appConfig);
         appConfig.styleButton(addButton, appConfig);
         appConfig.styleButton(editButton, appConfig);
 
-        viewButton.addActionListener(_ -> cardLayout.show(cardPanel, VIEW_PANEL));
+        deleteButton.addActionListener(_ -> System.out.println("Deleted"));
         addButton.addActionListener(_ -> cardLayout.show(cardPanel, ADD_PANEL));
         editButton.addActionListener(_ -> cardLayout.show(cardPanel, EDIT_PANEL));
 
-        navPanel.add(viewButton);
+        navPanel.add(deleteButton);
         navPanel.add(addButton);
         navPanel.add(editButton);
 

@@ -1,5 +1,6 @@
 import java.sql.*;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 public class AppConnection {
     AppConfig appConfig = new AppConfig();
@@ -60,7 +61,7 @@ public class AppConnection {
     }
 
     public boolean insertPassword(AddForm addForm)
-            throws SQLException, ClassNotFoundException {
+        throws SQLException, ClassNotFoundException {
 
         String title = addForm.addTitleField.getText();
         String username = addForm.addUsernameField.getText();
@@ -169,78 +170,126 @@ public class AppConnection {
     public boolean editPassword(EditForm editForm)
         throws SQLException, ClassNotFoundException {
 
-    String title = editForm.editTitleField.getText();
-    String username = editForm.editUsernameField.getText();
-    String password = new String(editForm.editPasswordField.getPassword());
-    String domain = editForm.editDomainField.getText();
+        String title = editForm.editTitleField.getText();
+        String username = editForm.editUsernameField.getText();
+        String password = new String(editForm.editPasswordField.getPassword());
+        String domain = editForm.editDomainField.getText();
 
-    Connection connection = null;
-    PreparedStatement passwordStatement = null;
-    PreparedStatement domainStatement = null;
-    ResultSet generatedKeys = null;
+        Connection connection = null;
+        PreparedStatement passwordStatement = null;
+        PreparedStatement domainStatement = null;
+        ResultSet generatedKeys = null;
 
-    try {
-        connection = createDatabaseConnection();
-        connection.setAutoCommit(false);
+        try {
+            connection = createDatabaseConnection();
+            connection.setAutoCommit(false);
 
-        int domainId;
-        String domainQuery = "SELECT id FROM domains WHERE domain = ?";
-        domainStatement = connection.prepareStatement(domainQuery);
-        domainStatement.setString(1, domain);
-        ResultSet domainResult = domainStatement.executeQuery();
-
-        if (domainResult.next()) {
-            domainId = domainResult.getInt("id");
-        } else {
-            domainStatement.close();
-            domainStatement = connection.prepareStatement(
-                "INSERT INTO domains (domain) VALUES (?)", 
-                Statement.RETURN_GENERATED_KEYS
-            );
+            int domainId;
+            String domainQuery = "SELECT id FROM domains WHERE domain = ?";
+            domainStatement = connection.prepareStatement(domainQuery);
             domainStatement.setString(1, domain);
-            domainStatement.executeUpdate();
+            ResultSet domainResult = domainStatement.executeQuery();
 
-            generatedKeys = domainStatement.getGeneratedKeys();
-            if (generatedKeys.next()) {
-                domainId = generatedKeys.getInt(1);
+            if (domainResult.next()) {
+                domainId = domainResult.getInt("id");
             } else {
-                throw new SQLException("Failed to get generated domain ID");
+                domainStatement.close();
+                domainStatement = connection.prepareStatement(
+                    "INSERT INTO domains (domain) VALUES (?)", 
+                    Statement.RETURN_GENERATED_KEYS
+                );
+                domainStatement.setString(1, domain);
+                domainStatement.executeUpdate();
+
+                generatedKeys = domainStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    domainId = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Failed to get generated domain ID");
+                }
             }
-        }
 
-        String updateQuery = "UPDATE passwords SET title = ?, username = ?, password = ?, domain_id = ? WHERE id = ?";
-        passwordStatement = connection.prepareStatement(updateQuery);
-        passwordStatement.setString(1, title);
-        passwordStatement.setString(2, username);
-        passwordStatement.setString(3, password);
-        passwordStatement.setInt(4, domainId);
+            String updateQuery = "UPDATE passwords SET title = ?, username = ?, password = ?, domain_id = ? WHERE id = ?";
+            passwordStatement = connection.prepareStatement(updateQuery);
+            passwordStatement.setString(1, title);
+            passwordStatement.setString(2, username);
+            passwordStatement.setString(3, password);
+            passwordStatement.setInt(4, domainId);
 
-        int rowsAffected = passwordStatement.executeUpdate();
+            int rowsAffected = passwordStatement.executeUpdate();
 
-        connection.commit();
+            connection.commit();
 
-        return rowsAffected > 0;
-    } catch (SQLException e) {
-        if (connection != null) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
+            return rowsAffected > 0;
+        } catch (SQLException e) {
+            if (connection != null) {
+                try {
+                    connection.rollback();
+                } catch (SQLException ex) {
+                    ex.printStackTrace();
+                }
             }
-        }
 
-        throw e;
-    } finally {
-        if (generatedKeys != null) try { generatedKeys.close(); } catch (SQLException e) { /* ignored */ }
-        if (domainStatement != null) try { domainStatement.close(); } catch (SQLException e) { /* ignored */ }
-        if (passwordStatement != null) try { passwordStatement.close(); } catch (SQLException e) { /* ignored */ }
-        if (connection != null) {
-            try {
-                connection.setAutoCommit(true);  // Reset auto-commit
-                connection.close();
-            } catch (SQLException e) { /* ignored */ }
+            throw e;
+        } finally {
+            if (generatedKeys != null) try { generatedKeys.close(); } catch (SQLException e) { /* ignored */ }
+            if (domainStatement != null) try { domainStatement.close(); } catch (SQLException e) { /* ignored */ }
+            if (passwordStatement != null) try { passwordStatement.close(); } catch (SQLException e) { /* ignored */ }
+            if (connection != null) {
+                try {
+                    connection.setAutoCommit(true);  // Reset auto-commit
+                    connection.close();
+                } catch (SQLException e) { /* ignored */ }
+            }
         }
     }
-}
 
+    public void loadDataFromDatabase(DefaultTableModel model, ViewForm viewForm)
+        throws SQLException, ClassNotFoundException {
+        Connection connection = null;
+
+        try {
+            connection = createDatabaseConnection();
+            connection.setAutoCommit(false);
+        
+            // Create SQL query with JOINs to get domain and tag names
+            String sql = "SELECT p.id, p.title, p.username, p.password, " +
+                            "d.domain as domain_name, t.name as tag_name, " +
+                            "p.creationDate, p.modiifedDate " +
+                            "FROM passwords p " +
+                            "LEFT JOIN domains d ON p.domain_id = d.id " +
+                            "LEFT JOIN tags t ON p.tag_id = t.id " +
+                            "ORDER BY p.id";
+            
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery(sql);
+                
+            // Clear existing data
+            while (model.getRowCount() > 0) {
+                model.removeRow(0);
+            }
+                
+            // Add data from result set to table model
+            while (rs.next()) {
+                Object[] row = {
+                    rs.getInt("id"),
+                    rs.getString("title"),
+                    rs.getString("username"),
+                    rs.getString("password"),
+                    rs.getString("domain_name"),
+                    rs.getString("tag_name"),
+                    rs.getTimestamp("creationDate"),
+                    rs.getTimestamp("modiifedDate")
+                };
+
+                model.addRow(row);
+            }
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(viewForm.createViewPanel(),
+                "Database error: " + e.getMessage(),
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+    }
 }
