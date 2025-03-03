@@ -75,6 +75,9 @@ public class AddForm {
         addButton.addActionListener(_ -> {
             try {
                 appConnection.insertPassword(this);
+                // clearFields();
+                DashboardForm.refreshViewPanel();
+                DashboardForm.cardLayout.show(DashboardForm.cardPanel, DashboardForm.VIEW_PANEL);
             } catch (SQLException | ClassNotFoundException e) {
                 appConnection.handleDatabaseError(e);
             }

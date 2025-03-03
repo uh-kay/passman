@@ -1,14 +1,17 @@
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
 import java.awt.*;
+import java.sql.SQLException;
 
 public class DashboardForm extends JFrame {
-    private JPanel cardPanel;
-    private CardLayout cardLayout;
+    public static JPanel cardPanel;
+    public static CardLayout cardLayout;
     private AppConnection appConnection;
-    private ViewForm viewForm;
+    private static ViewForm viewForm;
 
     // Card identifiers
-    private static final String VIEW_PANEL = "VIEW_PANEL";
+    public static final String VIEW_PANEL = "VIEW_PANEL";
     private static final String ADD_PANEL = "ADD_PANEL";
     private static final String EDIT_PANEL = "EDIT_PANEL";
 
@@ -75,6 +78,24 @@ public class DashboardForm extends JFrame {
         navPanel.add(editButton);
 
         return navPanel;
+    }
+
+    public static void refreshViewPanel() {
+        if (viewForm != null) {
+            // Clear existing data
+            DefaultTableModel model = viewForm.getTableModel();
+            while (model.getRowCount() > 0) {
+                model.removeRow(0);
+            }
+            
+            // Reload data
+            AppConnection appConnection = new AppConnection();
+            try {
+                appConnection.loadDataFromDatabase(model, viewForm);
+            } catch (ClassNotFoundException | SQLException e) {
+                appConnection.handleDatabaseError(e);
+            }
+        }
     }
 
     public static void main(String[] args) {

@@ -73,4 +73,19 @@ public class ViewForm {
     public DefaultTableModel getTableModel() {
         return tableModel;
     }
+
+    public void refreshData() {
+        // Clear existing data
+        while (tableModel.getRowCount() > 0) {
+            tableModel.removeRow(0);
+        }
+        
+        // Reload data from database
+        AppConnection appConnection = new AppConnection();
+        try {
+            appConnection.loadDataFromDatabase(tableModel, this);
+        } catch (ClassNotFoundException | SQLException e) {
+            appConnection.handleDatabaseError(e);
+        }
+    }
 }
