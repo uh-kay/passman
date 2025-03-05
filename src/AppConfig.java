@@ -133,6 +133,10 @@ public class AppConfig extends JFrame {
         itemTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         itemTable.setPreferredScrollableViewportSize(new Dimension(600, 400));
         itemTable.setFillsViewportHeight(true);
-        // itemTable.setBorder(BorderFactory.createLineBorder(Color.BLUE));
+
+        // Hide ID column
+        itemTable.getColumnModel().getColumn(0).setMinWidth(0);
+        itemTable.getColumnModel().getColumn(0).setMaxWidth(0);
+        itemTable.getColumnModel().getColumn(0).setWidth(0);
     }
 }
