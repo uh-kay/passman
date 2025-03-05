@@ -74,8 +74,10 @@ public class AppConfig extends JFrame {
                 Component c = super.getTableCellRendererComponent(
                     table, value, isSelected, hasFocus, row, column);
                 
-                // Remove cell borders
-                ((JComponent)c).setBorder(BorderFactory.createEmptyBorder());
+                ((JComponent)c).setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createEmptyBorder(0, 10, 0, 0), // 10 pixels left padding
+                    BorderFactory.createEmptyBorder(0, 0, 0, 0)
+                ));
                 
                 // Set colors for selected and unselected rows
                 if (isSelected) {
