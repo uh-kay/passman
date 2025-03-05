@@ -1,6 +1,7 @@
 import java.sql.*;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 public class AppConnection {
@@ -368,6 +369,33 @@ public class AppConnection {
                 "Database Error", 
                 JOptionPane.ERROR_MESSAGE);
             return false;
+        }
+    }
+
+    public void performLogout(DashboardForm dashboardForm)
+        throws SQLException, ClassNotFoundException {
+        try {
+            Connection connection = createDatabaseConnection();
+            // Step 1: Lock the database connection
+            if (connection != null && !connection.isClosed()) {
+                // Rollback any open transactions
+                if (!connection.getAutoCommit()) {
+                    connection.rollback();
+                }
+                
+                // Close the database connection
+                connection.close();
+            }
+
+            dashboardForm.dispose();
+
+            SwingUtilities.invokeLater(() -> {
+                AuthenticationForm authenticationForm = new AuthenticationForm();
+                authenticationForm.setVisible(true);
+            });
+
+        } catch (SQLException | ClassNotFoundException e) {
+            handleDatabaseError(e);
         }
     }
 }
