@@ -11,7 +11,7 @@ public class ViewForm {
 
     AppConfig appConfig = new AppConfig();
 
-    public JPanel createViewPanel() {
+    public JPanel createViewPanel(int userId) {
         var viewPanel = new JPanel();
         viewPanel.setLayout(new GridBagLayout());
         viewPanel.setBackground(Color.WHITE);
@@ -43,7 +43,7 @@ public class ViewForm {
         
         var appConnection = new AppConnection();
         try {
-            appConnection.loadDataFromDatabase(tableModel, this);
+            appConnection.loadDataFromDatabase(tableModel, this, userId);
         } catch (ClassNotFoundException | SQLException e) {
             appConnection.handleDatabaseError(e);
         }
@@ -59,14 +59,14 @@ public class ViewForm {
         return tableModel;
     }
 
-    public void refreshData() {
+    public void refreshData(int userId) {
         while (tableModel.getRowCount() > 0) {
             tableModel.removeRow(0);
         }
         
         AppConnection appConnection = new AppConnection();
         try {
-            appConnection.loadDataFromDatabase(tableModel, this);
+            appConnection.loadDataFromDatabase(tableModel, this, userId);
         } catch (ClassNotFoundException | SQLException e) {
             appConnection.handleDatabaseError(e);
         }

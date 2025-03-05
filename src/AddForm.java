@@ -11,7 +11,7 @@ public class AddForm {
 
     AppConfig appConfig = new AppConfig();
 
-    public JPanel createAddPanel() {
+    public JPanel createAddPanel(int userId) {
         var addPanel = new JPanel();
         addPanel.setLayout(new GridBagLayout());
         addPanel.setBackground(Color.WHITE);
@@ -83,7 +83,7 @@ public class AddForm {
 
         addButton.addActionListener(_ -> {
             try {
-                appConnection.insertPassword(this);
+                appConnection.insertPassword(this, userId);
                 clearFields();
                 DashboardForm.refreshViewPanel();
                 DashboardForm.cardLayout.show(DashboardForm.cardPanel, DashboardForm.VIEW_PANEL);

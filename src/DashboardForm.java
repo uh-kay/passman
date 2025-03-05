@@ -4,6 +4,7 @@ import java.awt.*;
 import java.sql.SQLException;
 
 public class DashboardForm extends JFrame {
+    private static int userId; // Add a field to store the userId
     public static JPanel cardPanel;
     public static CardLayout cardLayout;
     private AppConnection appConnection;
@@ -17,7 +18,9 @@ public class DashboardForm extends JFrame {
 
     AppConfig appConfig = new AppConfig();
     
-    public DashboardForm() {
+    // Modified constructor to accept userId
+    public DashboardForm(int userId) {
+        DashboardForm.userId = userId; // Store the userId
         initializeFrame();
         setupCardLayout();
     }
@@ -34,12 +37,15 @@ public class DashboardForm extends JFrame {
         cardLayout = new CardLayout();
         cardPanel = new JPanel(cardLayout);
 
-        // Create a single instance of ViewForm
+        // Pass userId to ViewForm constructor
         viewForm = new ViewForm();
-        var viewPanel = viewForm.createViewPanel();
+        var viewPanel = viewForm.createViewPanel(userId);
         
-        var addPanel = new AddForm().createAddPanel();
-        editForm = new EditForm(); // Create instance of EditForm
+        // Pass userId to AddForm constructor
+        var addPanel = new AddForm().createAddPanel(userId);
+        
+        // Pass userId to EditForm constructor
+        editForm = new EditForm();
         var editPanel = editForm.createEditPanel();
 
         cardPanel.add(viewPanel, VIEW_PANEL);
@@ -120,7 +126,6 @@ public class DashboardForm extends JFrame {
             );
         }
     }
-    
 
     public static void refreshViewPanel() {
         if (viewForm != null) {
@@ -133,14 +138,14 @@ public class DashboardForm extends JFrame {
             // Reload data
             var appConnection = new AppConnection();
             try {
-                appConnection.loadDataFromDatabase(model, viewForm);
+                appConnection.loadDataFromDatabase(model, viewForm, userId);
             } catch (ClassNotFoundException | SQLException e) {
                 appConnection.handleDatabaseError(e);
             }
         }
     }
 
-    public static void main(String[] args) {
-        new DashboardForm().setVisible(true);
-    }
+    // public static void main(String[] args) {
+    //     // new DashboardForm(userId).setVisible(true);
+    // }
 }

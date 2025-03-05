@@ -71,8 +71,8 @@ public class AuthenticationForm extends JFrame {
         return navPanel;
     }
 
-    public void openDashboard() {
-        new DashboardForm().setVisible(true);
+    public void openDashboard(int userId) {
+        new DashboardForm(userId).setVisible(true);
         this.dispose();
     }
 

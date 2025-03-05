@@ -53,8 +53,9 @@ public class LoginForm extends JFrame {
         // Add action listener
         var appConnection = new AppConnection();
         loginButton.addActionListener(_ -> {
-            if (appConnection.authenticate(this)) {
-                authenticationForm.openDashboard();
+            int userId = appConnection.authenticate(this);
+            if (userId > 0) {
+                authenticationForm.openDashboard(userId);
             }
         });
 
