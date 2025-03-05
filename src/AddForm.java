@@ -27,7 +27,9 @@ public class AddForm {
         addDomainField = new JTextField(20);
         addTagField = new JTextField(20);
         JButton addButton = new JButton("Add");
+        JButton cancelButton = new JButton("Cancel");
         appConfig.styleButton(addButton, appConfig);
+        appConfig.styleButton(cancelButton, appConfig);
         
         titLabel.setFont(appConfig.TITLE_FONT);
         gbc.gridx = 0;
@@ -65,10 +67,17 @@ public class AddForm {
         gbc.gridx = 1;
         addPanel.add(addTagField, gbc);
 
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.gridwidth = 1;
+        addPanel.add(cancelButton, gbc);
+
         gbc.gridx = 1;
         gbc.gridy = 6;
         gbc.gridwidth = 1;
         addPanel.add(addButton, gbc);
+
+        cancelButton.addActionListener(_ -> DashboardForm.cardLayout.show(DashboardForm.cardPanel, DashboardForm.VIEW_PANEL));
 
         AppConnection appConnection = new AppConnection();
 
@@ -82,6 +91,7 @@ public class AddForm {
                 appConnection.handleDatabaseError(e);
             }
         });
+
 
         return addPanel;
     }

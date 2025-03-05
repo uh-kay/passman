@@ -27,7 +27,9 @@ public class EditForm {
         editDomainField = new JTextField(20);
         editTagsField = new JTextField(20);
         JButton editButton = new JButton("Edit");
+        JButton cancelButton = new JButton("Cancel");
         appConfig.styleButton(editButton, appConfig);
+        appConfig.styleButton(cancelButton, appConfig);
         
         titLabel.setFont(appConfig.TITLE_FONT);
         gbc.gridx = 0;
@@ -65,10 +67,17 @@ public class EditForm {
         gbc.gridx = 1;
         editPanel.add(editTagsField, gbc);
 
+        gbc.gridx = 0;
+        gbc.gridy = 6;
+        gbc.gridwidth = 1;
+        editPanel.add(cancelButton, gbc);
+
         gbc.gridx = 1;
         gbc.gridy = 6;
         gbc.gridwidth = 1;
         editPanel.add(editButton, gbc);
+
+        cancelButton.addActionListener(_ -> DashboardForm.cardLayout.show(DashboardForm.cardPanel, DashboardForm.VIEW_PANEL));
 
         AppConnection appConnection = new AppConnection();
 
