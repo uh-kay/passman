@@ -3,7 +3,6 @@ import java.sql.SQLException;
 import javax.swing.*;
 
 public class EditForm {
-    private int selectedId;
     public JTextField editUsernameField;
     public JTextField editTitleField;
     public JPasswordField editPasswordField;
@@ -95,7 +94,6 @@ public class EditForm {
     }
 
     public void loadData(int id, String title, String username, String password, String domain, String tags) {
-        this.selectedId = id;
         editTitleField.setText(title);
         editUsernameField.setText(username);
         editPasswordField.setText(password);
