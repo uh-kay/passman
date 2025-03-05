@@ -1,6 +1,5 @@
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-
 import java.awt.*;
 import java.sql.SQLException;
 
@@ -9,6 +8,7 @@ public class DashboardForm extends JFrame {
     public static CardLayout cardLayout;
     private AppConnection appConnection;
     private static ViewForm viewForm;
+    private static EditForm editForm;
 
     // Card identifiers
     public static final String VIEW_PANEL = "VIEW_PANEL";
@@ -39,7 +39,8 @@ public class DashboardForm extends JFrame {
         var viewPanel = viewForm.createViewPanel();
         
         var addPanel = new AddForm().createAddPanel();
-        var editPanel = new EditForm().createEditPanel();
+        editForm = new EditForm(); // Create instance of EditForm
+        var editPanel = editForm.createEditPanel();
 
         cardPanel.add(viewPanel, VIEW_PANEL);
         cardPanel.add(addPanel, ADD_PANEL);
@@ -84,7 +85,7 @@ public class DashboardForm extends JFrame {
 
         deleteButton.addActionListener(_ -> appConnection.deleteSelectedItem(viewForm));
         addButton.addActionListener(_ -> cardLayout.show(cardPanel, ADD_PANEL));
-        editButton.addActionListener(_ -> cardLayout.show(cardPanel, EDIT_PANEL));
+        editButton.addActionListener(_ -> openEditForm());
         lockButton.addActionListener(_ -> {
             try {
                 appConnection.performLogout(this);
@@ -104,6 +105,22 @@ public class DashboardForm extends JFrame {
 
         return navPanel;
     }
+
+    private void openEditForm() {
+        int selectedRow = viewForm.getItemTable().getSelectedRow(); // select a row from te table
+    
+        if (selectedRow != -1) {
+            viewForm.sendDataToEditForm(editForm);
+        } else {
+            JOptionPane.showMessageDialog(
+                null, 
+                "Please select a row to edit", 
+                "No Row Selected", 
+                JOptionPane.WARNING_MESSAGE
+            );
+        }
+    }
+    
 
     public static void refreshViewPanel() {
         if (viewForm != null) {

@@ -111,4 +111,28 @@ public class ViewForm {
         StringSelection stringSelection = new StringSelection(username);
         clipboard.setContents(stringSelection, null);
     }
+    
+    public void sendDataToEditForm(EditForm editForm) {
+        int selectedRow = itemTable.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(
+                null, 
+                "Please select a row to edit", 
+                "No Row Selected", 
+                JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+        
+        int id = Integer.parseInt(tableModel.getValueAt(selectedRow, 0).toString());
+        String title = tableModel.getValueAt(selectedRow, 1).toString();
+        String username = tableModel.getValueAt(selectedRow, 2).toString();
+        String password = tableModel.getValueAt(selectedRow, 3).toString();
+        String domain = tableModel.getValueAt(selectedRow, 4).toString();
+        String tags = tableModel.getValueAt(selectedRow, 5).toString();
+        
+        editForm.loadData(id, title, username, password, domain, tags);
+        DashboardForm.cardLayout.show(DashboardForm.cardPanel, "EDIT_PANEL");
+    }
 }
