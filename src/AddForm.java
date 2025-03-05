@@ -12,22 +12,22 @@ public class AddForm {
     AppConfig appConfig = new AppConfig();
 
     public JPanel createAddPanel() {
-        JPanel addPanel = new JPanel();
+        var addPanel = new JPanel();
         addPanel.setLayout(new GridBagLayout());
         addPanel.setBackground(Color.WHITE);
         
-        GridBagConstraints gbc = new GridBagConstraints();
+        var gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel titLabel = new JLabel("Add");
+        var titLabel = new JLabel("Add");
         addTitleField = new JTextField(20);
         addUsernameField = new JTextField(20);
         addPasswordField = new JPasswordField(20);
         addDomainField = new JTextField(20);
         addTagField = new JTextField(20);
-        JButton addButton = new JButton("Add");
-        JButton cancelButton = new JButton("Cancel");
+        var addButton = new JButton("Add");
+        var cancelButton = new JButton("Cancel");
         appConfig.styleButton(addButton, appConfig);
         appConfig.styleButton(cancelButton, appConfig);
         
@@ -79,7 +79,7 @@ public class AddForm {
 
         cancelButton.addActionListener(_ -> DashboardForm.cardLayout.show(DashboardForm.cardPanel, DashboardForm.VIEW_PANEL));
 
-        AppConnection appConnection = new AppConnection();
+        var appConnection = new AppConnection();
 
         addButton.addActionListener(_ -> {
             try {

@@ -30,13 +30,13 @@ public class AuthenticationForm extends JFrame {
         cardPanel = new JPanel(cardLayout);
 
         // Create navigation panel
-        JPanel navPanel = createNavigationPanel();
+        var navPanel = createNavigationPanel();
 
         // Create content panels
-        JPanel loginPanel = new LoginForm().createLoginPanel(this);
+        var loginPanel = new LoginForm().createLoginPanel(this);
 
-        RegisterForm registerForm = new RegisterForm();
-        JPanel registrationPanel = registerForm.createRegistrationPanel();
+        var registerForm = new RegisterForm();
+        var registrationPanel = registerForm.createRegistrationPanel();
 
         // Add panels to card layout
         cardPanel.add(loginPanel, LOGIN_PANEL);
@@ -51,13 +51,13 @@ public class AuthenticationForm extends JFrame {
     }
 
     private JPanel createNavigationPanel() {
-        JPanel navPanel = new JPanel();
+        var navPanel = new JPanel();
         navPanel.setLayout(new GridLayout(1, 2, 10, 10));
         navPanel.setBackground(appConfig.PRIMARY_COLOR);
         navPanel.setPreferredSize(new Dimension(getWidth(), 40));
 
-        JButton loginBtn = new JButton("Login");
-        JButton registerBtn = new JButton("Register");
+        var loginBtn = new JButton("Login");
+        var registerBtn = new JButton("Register");
 
         appConfig.styleButton(loginBtn, appConfig);
         appConfig.styleButton(registerBtn, appConfig);

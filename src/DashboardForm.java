@@ -36,16 +36,16 @@ public class DashboardForm extends JFrame {
 
         // Create a single instance of ViewForm
         viewForm = new ViewForm();
-        JPanel viewPanel = viewForm.createViewPanel();
+        var viewPanel = viewForm.createViewPanel();
         
-        JPanel addPanel = new AddForm().createAddPanel();
-        JPanel editPanel = new EditForm().createEditPanel();
+        var addPanel = new AddForm().createAddPanel();
+        var editPanel = new EditForm().createEditPanel();
 
         cardPanel.add(viewPanel, VIEW_PANEL);
         cardPanel.add(addPanel, ADD_PANEL);
         cardPanel.add(editPanel, EDIT_PANEL);
 
-        JPanel navPanel = createNavPanel();
+        var navPanel = createNavPanel();
         
         add(navPanel, BorderLayout.SOUTH);
         add(cardPanel, BorderLayout.CENTER);
@@ -54,24 +54,24 @@ public class DashboardForm extends JFrame {
     }
 
     private JPanel createNavPanel() {
-        JPanel navPanel = new JPanel();
+        var navPanel = new JPanel();
         navPanel.setLayout(new GridLayout(1, 3, 10, 10));
         navPanel.setBackground(appConfig.PRIMARY_COLOR);
         navPanel.setPreferredSize(new Dimension(getWidth(), 40));
 
-        Icon addIcon = new ImageIcon("assets\\add.png");
-        Icon deleteIcon = new ImageIcon("assets\\delete.png");
-        Icon editIcon = new ImageIcon("assets\\edit.png");
-        Icon copyUsernameIcon = new ImageIcon("assets\\username-copy.png");
-        Icon copyPasswordIcon = new ImageIcon("assets\\password-copy.png");
-        Icon lockIcon = new ImageIcon("assets\\database-lock.png");
+        var addIcon = new ImageIcon("assets\\add.png");
+        var deleteIcon = new ImageIcon("assets\\delete.png");
+        var editIcon = new ImageIcon("assets\\edit.png");
+        var copyUsernameIcon = new ImageIcon("assets\\username-copy.png");
+        var copyPasswordIcon = new ImageIcon("assets\\password-copy.png");
+        var lockIcon = new ImageIcon("assets\\database-lock.png");
 
-        JButton deleteButton = new JButton(deleteIcon);
-        JButton addButton = new JButton(addIcon);
-        JButton editButton = new JButton(editIcon);
-        JButton copyPasswordButton = new JButton(copyPasswordIcon);
-        JButton copyUsernameButton = new JButton(copyUsernameIcon);
-        JButton lockButton = new JButton(lockIcon);
+        var deleteButton = new JButton(deleteIcon);
+        var addButton = new JButton(addIcon);
+        var editButton = new JButton(editIcon);
+        var copyPasswordButton = new JButton(copyPasswordIcon);
+        var copyUsernameButton = new JButton(copyUsernameIcon);
+        var lockButton = new JButton(lockIcon);
 
         appConfig.styleButton(deleteButton, appConfig);
         appConfig.styleButton(addButton, appConfig);
@@ -114,7 +114,7 @@ public class DashboardForm extends JFrame {
             }
             
             // Reload data
-            AppConnection appConnection = new AppConnection();
+            var appConnection = new AppConnection();
             try {
                 appConnection.loadDataFromDatabase(model, viewForm);
             } catch (ClassNotFoundException | SQLException e) {

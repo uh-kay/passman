@@ -12,22 +12,22 @@ public class EditForm {
     AppConfig appConfig = new AppConfig();
 
     public JPanel createEditPanel() {
-        JPanel editPanel = new JPanel();
+        var editPanel = new JPanel();
         editPanel.setLayout(new GridBagLayout());
         editPanel.setBackground(Color.WHITE);
         
-        GridBagConstraints gbc = new GridBagConstraints();
+        var gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JLabel titLabel = new JLabel("Edit");
+        var titLabel = new JLabel("Edit");
         editTitleField = new JTextField(20);
         editUsernameField = new JTextField(20);
         editPasswordField = new JPasswordField(20);
         editDomainField = new JTextField(20);
         editTagsField = new JTextField(20);
-        JButton editButton = new JButton("Edit");
-        JButton cancelButton = new JButton("Cancel");
+        var editButton = new JButton("Edit");
+        var cancelButton = new JButton("Cancel");
         appConfig.styleButton(editButton, appConfig);
         appConfig.styleButton(cancelButton, appConfig);
         
@@ -79,7 +79,7 @@ public class EditForm {
 
         cancelButton.addActionListener(_ -> DashboardForm.cardLayout.show(DashboardForm.cardPanel, DashboardForm.VIEW_PANEL));
 
-        AppConnection appConnection = new AppConnection();
+        var appConnection = new AppConnection();
 
         editButton.addActionListener(_ -> {
             try {

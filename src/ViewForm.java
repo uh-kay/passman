@@ -12,7 +12,7 @@ public class ViewForm {
     AppConfig appConfig = new AppConfig();
 
     public JPanel createViewPanel() {
-        JPanel viewPanel = new JPanel();
+        var viewPanel = new JPanel();
         viewPanel.setLayout(new GridBagLayout());
         viewPanel.setBackground(Color.WHITE);
 
@@ -30,7 +30,7 @@ public class ViewForm {
         itemTable = new JTable(tableModel);
         AppConfig.styleTable(itemTable, appConfig);
 
-        JScrollPane scrollPane = new JScrollPane(itemTable);
+        var scrollPane = new JScrollPane(itemTable);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLUE));
         
         gbc.gridx = 0;
@@ -41,7 +41,7 @@ public class ViewForm {
         gbc.insets = new Insets(10, 10, 10, 10);
         viewPanel.add(scrollPane, gbc);
         
-        AppConnection appConnection = new AppConnection();
+        var appConnection = new AppConnection();
         try {
             appConnection.loadDataFromDatabase(tableModel, this);
         } catch (ClassNotFoundException | SQLException e) {

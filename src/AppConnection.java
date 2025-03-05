@@ -1,6 +1,5 @@
 import java.sql.*;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
@@ -13,8 +12,8 @@ public class AppConnection {
     private final String DB_DRIVER = appConfig.get("DB_DRIVER");
 
     public boolean authenticate(LoginForm loginForm) {
-        String username = loginForm.loginUsernameField.getText();
-        String password = new String(loginForm.loginPasswordField.getPassword());
+        var username = loginForm.loginUsernameField.getText();
+        var password = new String(loginForm.loginPasswordField.getPassword());
 
         if (username.trim().isEmpty() || password.trim().isEmpty()) {
             JOptionPane.showMessageDialog(loginForm.createLoginPanel(null),
@@ -47,8 +46,8 @@ public class AppConnection {
 
     private PreparedStatement prepareAuthenticationStatement(Connection connection, String username, String password)
             throws SQLException {
-        String query = "SELECT * FROM users WHERE username = ? AND password = ?";
-        PreparedStatement statement = connection.prepareStatement(query);
+        var query = "SELECT * FROM users WHERE username = ? AND password = ?";
+        var statement = connection.prepareStatement(query);
         statement.setString(1, username);
         statement.setString(2, password);
         return statement;
@@ -65,11 +64,11 @@ public class AppConnection {
     public boolean insertPassword(AddForm addForm)
         throws SQLException, ClassNotFoundException {
 
-        String title = addForm.addTitleField.getText();
-        String username = addForm.addUsernameField.getText();
-        String password = new String(addForm.addPasswordField.getPassword());
-        String domain = addForm.addDomainField.getText();
-        String tag = addForm.addTagField.getText();
+        var title = addForm.addTitleField.getText();
+        var username = addForm.addUsernameField.getText();
+        var password = new String(addForm.addPasswordField.getPassword());
+        var domain = addForm.addDomainField.getText();
+        var tag = addForm.addTagField.getText();
 
         Connection connection = null;
         PreparedStatement passwordStatement = null;
@@ -172,10 +171,10 @@ public class AppConnection {
     public boolean editPassword(EditForm editForm)
         throws SQLException, ClassNotFoundException {
 
-        String title = editForm.editTitleField.getText();
-        String username = editForm.editUsernameField.getText();
-        String password = new String(editForm.editPasswordField.getPassword());
-        String domain = editForm.editDomainField.getText();
+        var title = editForm.editTitleField.getText();
+        var username = editForm.editUsernameField.getText();
+        var password = new String(editForm.editPasswordField.getPassword());
+        var domain = editForm.editDomainField.getText();
 
         Connection connection = null;
         PreparedStatement passwordStatement = null;
@@ -187,10 +186,10 @@ public class AppConnection {
             connection.setAutoCommit(false);
 
             int domainId;
-            String domainQuery = "SELECT id FROM domains WHERE domain = ?";
+            var domainQuery = "SELECT id FROM domains WHERE domain = ?";
             domainStatement = connection.prepareStatement(domainQuery);
             domainStatement.setString(1, domain);
-            ResultSet domainResult = domainStatement.executeQuery();
+            var domainResult = domainStatement.executeQuery();
 
             if (domainResult.next()) {
                 domainId = domainResult.getInt("id");
@@ -211,7 +210,7 @@ public class AppConnection {
                 }
             }
 
-            String updateQuery = "UPDATE passwords SET title = ?, username = ?, password = ?, domain_id = ? WHERE id = ?";
+            var updateQuery = "UPDATE passwords SET title = ?, username = ?, password = ?, domain_id = ? WHERE id = ?";
             passwordStatement = connection.prepareStatement(updateQuery);
             passwordStatement.setString(1, title);
             passwordStatement.setString(2, username);
@@ -255,7 +254,7 @@ public class AppConnection {
             connection.setAutoCommit(false);
         
             // Create SQL query with JOINs to get domain and tag names
-            String sql = "SELECT p.id, p.title, p.username, p.password, " +
+            var sql = "SELECT p.id, p.title, p.username, p.password, " +
                             "d.domain as domain_name, t.name as tag_name, " +
                             "p.creationDate, p.modiifedDate " +
                             "FROM passwords p " +
@@ -263,8 +262,8 @@ public class AppConnection {
                             "LEFT JOIN tags t ON p.tag_id = t.id " +
                             "ORDER BY p.id";
             
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+            var stmt = connection.createStatement();
+            var rs = stmt.executeQuery(sql);
                 
             // Clear existing data
             while (model.getRowCount() > 0) {
@@ -301,7 +300,7 @@ public class AppConnection {
             return;
         }
 
-        JTable table = viewForm.getItemTable();
+        var table = viewForm.getItemTable();
 
         if (table == null) {
             System.err.println("Error: Table reference is null in deleteSelectedItem");
@@ -323,11 +322,11 @@ public class AppConnection {
         }
         
         // Get the ID of the selected item
-        int itemId = (int) table.getValueAt(selectedRow, 0);
-        String itemName = (String) table.getValueAt(selectedRow, 1);
+        var itemId = (int) table.getValueAt(selectedRow, 0);
+        var itemName = (String) table.getValueAt(selectedRow, 1);
         
         // Confirm deletion
-        int confirmation = JOptionPane.showConfirmDialog(null,
+        var confirmation = JOptionPane.showConfirmDialog(null,
             "Are you sure you want to delete " + itemName + "?",
             "Confirm Deletion",
             JOptionPane.YES_NO_OPTION);
@@ -337,7 +336,7 @@ public class AppConnection {
             try {
                 if (deleteItemFromDatabase(itemId)) {
                     // Remove from table model if delete was successful
-                    DefaultTableModel model = (DefaultTableModel) table.getModel();
+                    var model = (DefaultTableModel) table.getModel();
                     model.removeRow(selectedRow);
                     JOptionPane.showMessageDialog(null, 
                         "Item deleted successfully",
@@ -354,10 +353,10 @@ public class AppConnection {
         throws SQLException, ClassNotFoundException {
         Connection connection = createDatabaseConnection();
         
-        String sql = "DELETE FROM passwords WHERE id = ?";
+        var sql = "DELETE FROM passwords WHERE id = ?";
         
         try {
-            PreparedStatement statement = connection.prepareStatement(sql);
+            var statement = connection.prepareStatement(sql);
             
             statement.setInt(1, itemId);
             int rowsAffected = statement.executeUpdate();
@@ -375,7 +374,7 @@ public class AppConnection {
     public void performLogout(DashboardForm dashboardForm)
         throws SQLException, ClassNotFoundException {
         try {
-            Connection connection = createDatabaseConnection();
+            var connection = createDatabaseConnection();
             // Step 1: Lock the database connection
             if (connection != null && !connection.isClosed()) {
                 // Rollback any open transactions

@@ -15,16 +15,16 @@ public class RegisterForm extends JFrame {
     private JPasswordField regConfirmPasswordField;
 
     public JPanel createRegistrationPanel() {
-        JPanel registrationPanel = new JPanel();
+        var registrationPanel = new JPanel();
         registrationPanel.setLayout(new GridBagLayout());
         registrationPanel.setBackground(Color.WHITE);
         
-        GridBagConstraints gbc = new GridBagConstraints();
+        var gbc = new GridBagConstraints();
         gbc.insets = new Insets(5, 5, 5, 5);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Add title
-        JLabel titleLabel = new JLabel("Create New Account");
+        var titleLabel = new JLabel("Create New Account");
         titleLabel.setFont(appConfig.TITLE_FONT);
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -35,8 +35,8 @@ public class RegisterForm extends JFrame {
         regUsernameField = new JTextField(20);
         regPasswordField = new JPasswordField(20);
         regConfirmPasswordField = new JPasswordField(20);
-        JButton registerButton = new JButton("Register");
-        JButton clearButton = new JButton("Clear");
+        var registerButton = new JButton("Register");
+        var clearButton = new JButton("Clear");
         
         appConfig.styleButton(registerButton, appConfig);
         appConfig.styleButton(clearButton, appConfig);
@@ -60,7 +60,7 @@ public class RegisterForm extends JFrame {
         registrationPanel.add(regConfirmPasswordField, gbc);
 
         // Buttons
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        var buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         buttonPanel.setBackground(Color.WHITE);
         buttonPanel.add(registerButton);
         buttonPanel.add(clearButton);
@@ -82,8 +82,8 @@ public class RegisterForm extends JFrame {
             return;
         }
         
-        String username = regUsernameField.getText();
-        String password = new String(regPasswordField.getPassword());
+        var username = regUsernameField.getText();
+        var password = new String(regPasswordField.getPassword());
         
         try {
             if (isUsernameTaken(username)) {
@@ -130,8 +130,8 @@ public class RegisterForm extends JFrame {
         }
         
         // Check if passwords match
-        String password = new String(regPasswordField.getPassword());
-        String confirmPassword = new String(regConfirmPasswordField.getPassword());
+        var password = new String(regPasswordField.getPassword());
+        var confirmPassword = new String(regConfirmPasswordField.getPassword());
         if (!password.equals(confirmPassword)) {
             JOptionPane.showMessageDialog(this, 
                 "Passwords do not match.", 
@@ -150,13 +150,13 @@ public class RegisterForm extends JFrame {
     }
 
     private boolean isUsernameTaken(String username) throws SQLException, ClassNotFoundException {
-        String query = "SELECT username FROM users WHERE username = ?";
+        var query = "SELECT username FROM users WHERE username = ?";
         
-        try (Connection connection = createDatabaseConnection();
-             PreparedStatement statement = connection.prepareStatement(query)) {
+        try (var connection = createDatabaseConnection();
+             var statement = connection.prepareStatement(query)) {
             
             statement.setString(1, username);
-            try (ResultSet resultSet = statement.executeQuery()) {
+            try (var resultSet = statement.executeQuery()) {
                 return resultSet.next(); // Returns true if username exists
             }
         }
@@ -164,15 +164,15 @@ public class RegisterForm extends JFrame {
 
     private boolean insertNewUser(String username, String password) 
         throws SQLException, ClassNotFoundException {
-            String query = "INSERT INTO users (username, password) VALUES (?, ?)";
+            var query = "INSERT INTO users (username, password) VALUES (?, ?)";
         
-            try (Connection connection = createDatabaseConnection();
-                PreparedStatement statement = connection.prepareStatement(query)) {
+            try (var connection = createDatabaseConnection();
+                var statement = connection.prepareStatement(query)) {
                 
                 statement.setString(1, username);
                 statement.setString(2, password);
                 
-                int rowsAffected = statement.executeUpdate();
+                var rowsAffected = statement.executeUpdate();
                 return rowsAffected > 0;
             }
     }
