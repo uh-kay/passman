@@ -92,12 +92,14 @@ public class DashboardForm extends JFrame {
                 appConnection.handleDatabaseError(e);
             }
         });
+        copyPasswordButton.addActionListener(_ -> viewForm.copyPasswordToClipboard());
+        copyUsernameButton.addActionListener(_ -> viewForm.copyUsernameToClipboard());
 
         navPanel.add(addButton);
-        navPanel.add(copyUsernameButton);
-        navPanel.add(copyPasswordButton);
         navPanel.add(editButton);
         navPanel.add(deleteButton);
+        navPanel.add(copyUsernameButton);
+        navPanel.add(copyPasswordButton);
         navPanel.add(lockButton);
 
         return navPanel;

@@ -1,6 +1,7 @@
 import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.sql.SQLException;
-
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
@@ -17,13 +18,12 @@ public class ViewForm {
 
         GridBagConstraints gbc = new GridBagConstraints();
         
-        // Create column names and data for the table
         String[] columnNames = {"ID", "Title", "Username", "Password", "Domain", "Tag", "Creation Date", "Modified Date"};
         
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Make table read-only
+                return false;
             }
         };
 
@@ -32,7 +32,7 @@ public class ViewForm {
         itemTable.setPreferredScrollableViewportSize(new Dimension(600, 400));
         itemTable.setFillsViewportHeight(true);
         
-        itemTable.getColumnModel().getColumn(2).setCellRenderer((tbl, _, isSelected, _, _, _) -> {
+        itemTable.getColumnModel().getColumn(3).setCellRenderer((tbl, _, isSelected, _, _, _) -> {
             JLabel label = new JLabel("********");
             if (isSelected) {
                 label.setBackground(tbl.getSelectionBackground());
@@ -42,11 +42,9 @@ public class ViewForm {
             return label;
         });
 
-        // Create a scroll pane for the table
         JScrollPane scrollPane = new JScrollPane(itemTable);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLUE));
         
-        // Add the table to the layout
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.BOTH;
@@ -55,7 +53,6 @@ public class ViewForm {
         gbc.insets = new Insets(10, 10, 10, 10);
         viewPanel.add(scrollPane, gbc);
         
-        // Load data from MySQL
         AppConnection appConnection = new AppConnection();
         try {
             appConnection.loadDataFromDatabase(tableModel, this);
@@ -75,17 +72,55 @@ public class ViewForm {
     }
 
     public void refreshData() {
-        // Clear existing data
         while (tableModel.getRowCount() > 0) {
             tableModel.removeRow(0);
         }
         
-        // Reload data from database
         AppConnection appConnection = new AppConnection();
         try {
             appConnection.loadDataFromDatabase(tableModel, this);
         } catch (ClassNotFoundException | SQLException e) {
             appConnection.handleDatabaseError(e);
         }
+    }
+
+    public void copyPasswordToClipboard() {
+        int selectedRow = itemTable.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(
+                null, 
+                "Please select a row to copy password", 
+                "No Row Selected", 
+                JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        String password = (String) tableModel.getValueAt(selectedRow, 3);
+        
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection stringSelection = new StringSelection(password);
+        clipboard.setContents(stringSelection, null);
+    }
+
+    public void copyUsernameToClipboard() {
+        int selectedRow = itemTable.getSelectedRow();
+        
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(
+                null, 
+                "Please select a row to copy username", 
+                "No Row Selected", 
+                JOptionPane.WARNING_MESSAGE
+            );
+            return;
+        }
+
+        String username = (String) tableModel.getValueAt(selectedRow, 2);
+        
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        StringSelection stringSelection = new StringSelection(username);
+        clipboard.setContents(stringSelection, null);
     }
 }
