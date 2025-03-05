@@ -18,7 +18,7 @@ public class ViewForm {
 
         GridBagConstraints gbc = new GridBagConstraints();
         
-        String[] columnNames = {"ID", "Title", "Username", "Password", "Domain", "Tag", "Creation Date", "Modified Date"};
+        String[] columnNames = {"ID", "Title", "Username", "Password", "Domain", "Tag"};
         
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -28,19 +28,7 @@ public class ViewForm {
         };
 
         itemTable = new JTable(tableModel);
-        itemTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        itemTable.setPreferredScrollableViewportSize(new Dimension(600, 400));
-        itemTable.setFillsViewportHeight(true);
-        
-        itemTable.getColumnModel().getColumn(3).setCellRenderer((tbl, _, isSelected, _, _, _) -> {
-            JLabel label = new JLabel("********");
-            if (isSelected) {
-                label.setBackground(tbl.getSelectionBackground());
-                label.setForeground(tbl.getSelectionForeground());
-                label.setOpaque(true);
-            }
-            return label;
-        });
+        AppConfig.styleTable(itemTable, appConfig);
 
         JScrollPane scrollPane = new JScrollPane(itemTable);
         scrollPane.setBorder(BorderFactory.createLineBorder(Color.BLUE));
