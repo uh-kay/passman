@@ -64,30 +64,41 @@ public class DashboardForm extends JFrame {
         Icon editIcon = new ImageIcon("assets\\edit.png");
         Icon copyUsernameIcon = new ImageIcon("assets\\username-copy.png");
         Icon copyPasswordIcon = new ImageIcon("assets\\password-copy.png");
+        Icon lockIcon = new ImageIcon("assets\\database-lock.png");
 
         JButton deleteButton = new JButton(deleteIcon);
         JButton addButton = new JButton(addIcon);
         JButton editButton = new JButton(editIcon);
         JButton copyPasswordButton = new JButton(copyPasswordIcon);
         JButton copyUsernameButton = new JButton(copyUsernameIcon);
+        JButton lockButton = new JButton(lockIcon);
 
         appConfig.styleButton(deleteButton, appConfig);
         appConfig.styleButton(addButton, appConfig);
         appConfig.styleButton(editButton, appConfig);
         appConfig.styleButton(copyPasswordButton, appConfig);
         appConfig.styleButton(copyUsernameButton, appConfig);
+        appConfig.styleButton(lockButton, appConfig);
 
         appConnection = new AppConnection();
 
         deleteButton.addActionListener(_ -> appConnection.deleteSelectedItem(viewForm));
         addButton.addActionListener(_ -> cardLayout.show(cardPanel, ADD_PANEL));
         editButton.addActionListener(_ -> cardLayout.show(cardPanel, EDIT_PANEL));
+        lockButton.addActionListener(_ -> {
+            try {
+                appConnection.performLogout(this);
+            } catch (SQLException | ClassNotFoundException e) {
+                appConnection.handleDatabaseError(e);
+            }
+        });
 
         navPanel.add(addButton);
         navPanel.add(copyUsernameButton);
         navPanel.add(copyPasswordButton);
         navPanel.add(editButton);
         navPanel.add(deleteButton);
+        navPanel.add(lockButton);
 
         return navPanel;
     }
