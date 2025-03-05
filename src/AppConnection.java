@@ -176,10 +176,12 @@ public class AppConnection {
         String username = editForm.editUsernameField.getText();
         String password = new String(editForm.editPasswordField.getPassword());
         String domain = editForm.editDomainField.getText();
+        String tag = editForm.editTagsField.getText();
 
         Connection connection = null;
         PreparedStatement passwordStatement = null;
         PreparedStatement domainStatement = null;
+        PreparedStatement tagStatement = null;
         ResultSet generatedKeys = null;
 
         try {
@@ -211,12 +213,38 @@ public class AppConnection {
                 }
             }
 
-            String updateQuery = "UPDATE passwords SET title = ?, username = ?, password = ?, domain_id = ? WHERE id = ?";
+            int tagId;
+            String tagQuery = "SELECT id FROM tags WHERE name = ?";
+            tagStatement = connection.prepareStatement(tagQuery);
+            tagStatement.setString(1, tag);
+            ResultSet tagResult = tagStatement.executeQuery();
+
+            if (tagResult.next()) {
+                tagId = tagResult.getInt("id");
+            } else {
+                tagStatement.close();
+                tagStatement = connection.prepareStatement(
+                    "INSERT INTO tags (name) VALUES (?)",
+                    Statement.RETURN_GENERATED_KEYS
+                );
+                tagStatement.setString(1, tag);
+                tagStatement.executeUpdate();
+
+                generatedKeys = tagStatement.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    tagId = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Failed to get generated tag ID");
+                }
+            }
+
+            String updateQuery = "UPDATE passwords SET title = ?, username = ?, password = ?, domain_id = ? , tag_id = ? , WHERE id = ?";
             passwordStatement = connection.prepareStatement(updateQuery);
             passwordStatement.setString(1, title);
             passwordStatement.setString(2, username);
             passwordStatement.setString(3, password);
             passwordStatement.setInt(4, domainId);
+            passwordStatement.setInt(5, tagId);
 
             int rowsAffected = passwordStatement.executeUpdate();
 
