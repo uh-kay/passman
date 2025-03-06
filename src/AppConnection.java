@@ -233,14 +233,14 @@ public class AppConnection {
         }
     }
 
-    public boolean editPassword(EditForm editForm)
+    public boolean editPassword(EditForm editForm, int passId)
         throws SQLException, ClassNotFoundException {
-
+        
         var title = editForm.editTitleField.getText();
         var username = editForm.editUsernameField.getText();
         var password = new String(editForm.editPasswordField.getPassword());
         var domain = editForm.editDomainField.getText();
-        var tag = editForm.editTagsField.getText();
+        var tag = editForm.editTagField.getText();
 
         Connection connection = null;
         PreparedStatement passwordStatement = null;
@@ -302,13 +302,14 @@ public class AppConnection {
                 }
             }
 
-            String updateQuery = "UPDATE passwords SET title = ?, username = ?, password = ?, domain_id = ? , tag_id = ? , WHERE id = ?";
+            String updateQuery = "UPDATE passwords SET title = ?, username = ?, password = ?, domain_id = ? , tag_id = ? WHERE id = ?";
             passwordStatement = connection.prepareStatement(updateQuery);
             passwordStatement.setString(1, title);
             passwordStatement.setString(2, username);
             passwordStatement.setString(3, password);
             passwordStatement.setInt(4, domainId);
             passwordStatement.setInt(5, tagId);
+            passwordStatement.setInt(6, passId);
 
             int rowsAffected = passwordStatement.executeUpdate();
 
